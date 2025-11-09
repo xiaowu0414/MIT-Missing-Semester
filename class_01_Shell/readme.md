@@ -1,12 +1,14 @@
 # Shell 命令
 
+其他学习笔记：[学习笔记汇总](https://mcnuuzg9cgrt.feishu.cn/wiki/IafgwclaUiMVkBkkOCXcjLKinuc?from=from_copylink)
+
 # Linux 简单介绍
 
 在介绍 Shell 之前，先对 Linux 做简单介绍，以便后续学习
 
 因为自己计算机目前是 Windows，所以这节课我会利用 wsl2，在 Windows 上的 Ubuntu 子系统来完成
 
-对 wsl2 不了解的可以去看：[速通 wsl2](https://kcn8yzrf547f.feishu.cn/wiki/MGjywRKCXizXeVkWCNYc6meFnVf)
+对 wsl2 不了解的可以去看：[https://www.bilibili.com/video/BV1ce46ziE1r/?spm_id_from=333.337.search-card.all.click](https://www.bilibili.com/video/BV1ce46ziE1r/?spm_id_from=333.337.search-card.all.click)
 
 ## Linux 系统目录结构：
 
@@ -277,26 +279,37 @@ Sat Nov  8 14:42:38 CST
 
 ## Echo
 
-### Echo $PATH：
+### echo：
+
+echo 这个程序会将他接收到的所有参数直接输出
+
+```shell
+tulei@tulei:~$ echo hello
+hello
+#因为shell的逻辑是：把你输入的第一个词作为程序，第二个词作为这个程序的参数（argument）
+#所以要是输入的参数具有 “ ” 或者可能造成歧义的符号时，请使用'' 或""将他们括起来
+tulei@tulei:~$ echo "Hello world"
+Hello world
+#当然也可以使用转义字符，来限制转义字符后边符号的意义
+tulei@tulei:~$ echo Hello\ world
+Hello world
+```
+
+### Echo $PATH 和 which：
+
+计算机怎么知道他是程序呢？
+
+一般来说，shell 解释器会有一些固定的程序，被存储在/bin 文件夹中
+
+而对于外部命令，shell 第一时间在/bin 中没有找到对应的程序，就会去系统环境变量 PATH 中寻找
 
 ```shell
 # echo $PATH会打印出你所配置的所有环境变量
 tulei@tulei:~$ echo $PATH
 
-#which echo 可以查看echo这个脚本在bin文件夹的哪里
+#which echo 可以使用which查看echo这个脚本在哪里
 tulei@tulei:~$ which echo
 /usr/bin/echo
-```
-
-### echo：
-
-```shell
-tulei@tulei:~$ echo hello
-hello
-tulei@tulei:~$ echo "Hello world"
-Hello world
-tulei@tulei:~$ echo Hello\ world
-Hello world
 ```
 
 ### echo & cat：
@@ -318,7 +331,7 @@ tulei@tulei:~$
 
 ---
 
-## 对位置的操作：pwd,ls,cd
+## 导航操作：pwd、ls、cd、find
 
 ### pwd
 
@@ -351,6 +364,9 @@ bin   dev  home  lib    lib64   lost+found  mnt  proc  run   snap  sys  usr
 boot  etc  init  lib32  libx32  media       opt  root  sbin  srv   tmp  var
 #信息包括：_文件类型，创建者权限，_所在分组对其权限，_其他人权限，节点，创建时属组，_目前所在分组，_大小，最后一次修改日期，名称_
 _#对权限的说明：r可读，w可写，x可执行_
+#想要进入一个目录的子目录时，需要对父目录和对应的子目录都具有执行权限x
+#想要对一个目录使用ls 列出他的子目录有哪些，则需要对这个目录有阅读权限r
+#想阅读一个目录的子文件时，需要对文件有阅读权限r
 tulei@tulei:/$ ls -l
 total 2728
 lrwxrwxrwx   1 root root       7 Jan  7  2025 bin -> usr/bin
@@ -514,13 +530,15 @@ tulei@tulei:~$
 
 程序与外界交互实际上依赖于 stream
 
-shell 提供了重定向这些 stream 的方法：
+他的输入都来自于 input stream，而输出都会去 output stream（一般来说，input stream 和 output stream 都被定位在我们的屏幕上）
+
+但，shell 提供了重定向这些 stream 的方法：
 
 ### > & <
 
-<：重定向这个程序的输入流，变成这个文件的内容
+<：重定向这个程序的输入流，把程序的输入变成后边文件的内容
 
-> ：重定向这个程序的输出流，变成这个文件的内容
+> ：重定向这个程序的输出流，把程序的输出变成后边文件的输入
 
 ```shell
 #最开始，当我使用 echo hello，这个程序的输出流就有了 hello,并将输出流的内容打印在屏幕上
@@ -547,6 +565,7 @@ tulei@tulei:~$
 在理解了 input stream 和 output stream 之后,我想你可以理解以下操作:
 
 ```shell
+#流操作是从左向右依次执行的
 tulei@tulei:~$ cat < hello.txt > hello_2.txt
 tulei@tulei:~$ ls
 hello.txt  hello_2.txt
@@ -559,8 +578,8 @@ tulei@tulei:~$
 
 ### >>
 
->> :他不是像 > 一样暴力地覆盖掉原内容,而是将输出内容加入原内容后边
->>
+‘>>' :他不是像 > 一样暴力地覆盖掉原内容,而是将输出内容加入原内容后边
+
 
 ```bash
 tulei@tulei:~$ ls
