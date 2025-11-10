@@ -11,10 +11,14 @@
             "id": "7bfe99ad22fdbfe0",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "class_02_ShellScript/ShellScript.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "新标签页"
+              "title": "ShellScript"
             }
           }
         ]
@@ -163,5 +167,7 @@
     }
   },
   "active": "7bfe99ad22fdbfe0",
-  "lastOpenFiles": []
+  "lastOpenFiles": [
+    "Pasted image 20251110234111.png"
+  ]
 }
