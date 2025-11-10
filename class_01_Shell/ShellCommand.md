@@ -1,8 +1,12 @@
-# Shell 命令
+# Shell Command
 
 其他学习笔记：[学习笔记汇总](https://mcnuuzg9cgrt.feishu.cn/wiki/IafgwclaUiMVkBkkOCXcjLKinuc?from=from_copylink)
 
-# Linux 简单介绍
+[the-art-of-command-line](https://github.com/jlevy/the-art-of-command-line/blob/master/README-zh.md)
+
+[https://explainshell.com/](https://explainshell.com/)
+
+## Linux 简单介绍
 
 在介绍 Shell 之前，先对 Linux 做简单介绍，以便后续学习
 
@@ -10,7 +14,7 @@
 
 对 wsl2 不了解的可以去看：[https://www.bilibili.com/video/BV1ce46ziE1r/?spm_id_from=333.337.search-card.all.click](https://www.bilibili.com/video/BV1ce46ziE1r/?spm_id_from=333.337.search-card.all.click)
 
-## Linux 系统目录结构：
+### Linux 系统目录结构：
 
 ![](static/LFQrbXOJzoxxowxAlglcLPX8nlg.png)
 
@@ -23,17 +27,17 @@ boot  etc  init  lib32  libx32  media       opt  root  sbin  srv   tmp  var
 
 ---
 
-## 每个文件夹存储的内容：（初学可以不做详细了解）
+### 每个文件夹存储的内容：（初学可以不做详细了解）
 
-### bin:
+#### bin:
 
 全部为执行命令，执行程序，（Linux 一般绿色默认为可执行程序）bin 中为普通用户也可执行的命令
 
-### boot:
+#### boot:
 
 引导分区，用来装载开机启动项的一些东西
 
-### dev:
+#### dev:
 
 一般存放一些存储介质
 
@@ -92,37 +96,37 @@ C:\            9p       937G  567G  371G  61% /mnt/c
 tmpfs          tmpfs    4.8G  4.0K  4.8G   1% /run/user/1000
 ```
 
-### etc:
+#### etc:
 
 系统的与服务的一些配置文件
 
 该根目录是系统上最重要的根目录之一。etc 文件夹（etcetera 的缩写）是存储操作系统使用的系统文件的常见位置。
 
-### home
+#### home
 
 普通用户家目录
 
-### lib
+#### lib
 
 存放一些库文件
 
-### lost+found
+#### lost+found
 
 表示被挂载的文件夹
 
-### media    mnt
+#### media    mnt
 
 挂载外部存储介质
 
-### opt
+#### opt
 
 一些大的应用程序
 
-### proc
+#### proc
 
 系统开机前不存在，存放一些临时文件
 
-### root
+#### root
 
 管理员的家目录
 
@@ -130,23 +134,23 @@ tmpfs          tmpfs    4.8G  4.0K  4.8G   1% /run/user/1000
 
 **与/home** 目录不同，**/root** 文件夹实际上是“root”系统用户的主目录。除了理解这是“root”用户的主目录之外，该文件夹没有其他任何内容
 
-### sbin
+#### sbin
 
 root 账号可执行的命令
 
-### selinux
+#### selinux
 
 系统防护
 
-### srv
+#### srv
 
 系统存放的一些目录
 
-### sys
+#### sys
 
 不是真实存在的文件，而是一些内核参数
 
-### tmp（重要）
+#### tmp（重要）
 
 拥有对源代码的编译权限，一般通过 shell 把 exp 传入根目录后移动到此编译
 
@@ -154,11 +158,11 @@ root 账号可执行的命令
 
 对我们进行渗透测试有用的是，默认情况下任何用户都可以写入此文件夹。这意味着一旦我们能够访问一台机器，它就可以作为存储枚举脚本等内容的好地方。
 
-### usr（重要）
+#### usr（重要）
 
 源代码安装程序
 
-### var（重要）
+#### var（重要）
 
 日志文件夹，网站根目录，网站日志
 
@@ -166,9 +170,9 @@ root 账号可执行的命令
 
 ---
 
-# Shell 命令简单演示
+## Shell 命令简单演示
 
-## Linux 命令
+### Linux 命令
 
 Shell 是用 C 语言编写好的程序，用户可以用它来使用 Linux
 
@@ -191,7 +195,7 @@ Linux 命令的通用命令格式  ：命令字  [选项]  [参数]
 
 ---
 
-## Help & man
+### Help & man
 
 在开始之前，先介绍 --help 以及 man 。在你遇到任何困难时，查看帮助文档往往可以快速解决问题
 
@@ -222,11 +226,11 @@ tulei@tulei:~$ man pwd
 
 ---
 
-## 基本信息的查看：
+### 基本信息的查看：
 
 接下来介绍几种你可能会用到的信息，当然，实际上往往并不不常用
 
-### whoami:
+#### whoami:
 
 ```shell
 #输出用户身份
@@ -234,7 +238,7 @@ tulei@tulei:~$ whoami
 tulei
 ```
 
-### Clear:
+#### Clear:
 
 或者使用 CTRL+L 也是可以达到相同效果的
 
@@ -242,7 +246,7 @@ tulei
 #清空界面
 ```
 
-### uname:
+#### uname:
 
 ```shell
 #查看系统信息
@@ -258,7 +262,7 @@ Linux tulei 6.6.87.2-microsoft-standard-WSL2
 #1 SMP PREEMPT_DYNAMIC Thu Jun  5 18:30:46 UTC 2025 x86_64 x86_64 x86_64 GNU/Linux
 ```
 
-### hostname:
+#### hostname:
 
 ```shell
 #查看主机信息，并修改名称（只有root权限用户才可修改）
@@ -268,7 +272,7 @@ tulei@tulei:~$ hostname testname
 hostname: you must be root to change the host name
 ```
 
-### date:
+#### date:
 
 ```shell
 tulei@tulei:~$ date
@@ -277,9 +281,9 @@ Sat Nov  8 14:42:38 CST
 
 ---
 
-## Echo
+### Echo
 
-### echo：
+#### echo：
 
 echo 这个程序会将他接收到的所有参数直接输出
 
@@ -295,7 +299,7 @@ tulei@tulei:~$ echo Hello\ world
 Hello world
 ```
 
-### Echo $PATH 和 which：
+#### Echo $PATH 和 which：
 
 计算机怎么知道他是程序呢？
 
@@ -312,7 +316,7 @@ tulei@tulei:~$ which echo
 /usr/bin/echo
 ```
 
-### echo & cat：
+#### echo & cat：
 
 echo 可以直接将文字写入文档
 
@@ -331,9 +335,9 @@ tulei@tulei:~$
 
 ---
 
-## 导航操作：pwd、ls、cd、find
+### 导航操作：pwd、ls、cd、find
 
-### pwd
+#### pwd
 
 ```shell
 #查看目前所在位置：
@@ -341,7 +345,7 @@ tulei@tulei:~$ pwd
 /home/tulei
 ```
 
-### ls
+#### ls
 
 ```bash
 #查看当前目录下文件：当前目录没有，回到上一级，可以看到
@@ -395,7 +399,7 @@ drwxr-xr-x  14 root root    4096 Jan  7  2025 usr
 drwxr-xr-x  13 root root    4096 Jan  7  2025 var
 ```
 
-### cd
+#### cd
 
 ```bash
 #移动到绝对路径：
@@ -429,7 +433,7 @@ tulei@tulei:/dev$ cd -
 /home/tulei
 ```
 
-### find
+#### find
 
 ```shell
 #find 使用时记得加 . -name,并且，后边名称部分可以使用通配符*来进行模糊查找 
@@ -450,9 +454,9 @@ tulei@tulei:~$
 
 ---
 
-## 对文件的操作：
+### 对文件的操作：
 
-### mkdir & mv
+#### mkdir & mv
 
 mkdir：创建新的子目录
 
@@ -480,7 +484,7 @@ hello.txt
 tulei@tulei:~$
 ```
 
-### cp
+#### cp
 
 复制到目标位置：
 
@@ -495,7 +499,7 @@ hello.txt
 tulei@tulei:~$
 ```
 
-### rm
+#### rm
 
 rm 只能删除文件，不能删除文件夹，而删除文件夹需要 rmdir
 
@@ -526,7 +530,7 @@ tulei@tulei:~$
 
 ---
 
-## Stream
+### Stream
 
 程序与外界交互实际上依赖于 stream
 
@@ -534,7 +538,7 @@ tulei@tulei:~$
 
 但，shell 提供了重定向这些 stream 的方法：
 
-### > & <
+#### > & <
 
 <：重定向这个程序的输入流，把程序的输入变成后边文件的内容
 
@@ -576,10 +580,10 @@ tulei@tulei:~$
 
 他将一个文件的内容读取入自己的 input stream, 并把自己的 out stream 重定向为另一个文件,实现了复制操作
 
-### >>
+#### >>
 
-‘>>' :他不是像 > 一样暴力地覆盖掉原内容,而是将输出内容加入原内容后边
-
+>> :他不是像 > 一样暴力地覆盖掉原内容,而是将输出内容加入原内容后边
+>>
 
 ```bash
 tulei@tulei:~$ ls
@@ -596,7 +600,7 @@ hello again
 tulei@tulei:~$
 ```
 
-### |
+#### |
 
 Pipe(|):他可以将左边程序的输入变成右边程序的输出
 
@@ -620,7 +624,7 @@ pipe 不只可以用来处理文本,他也可以被用来处理二进制图片,�
 
 ---
 
-## sudo
+### sudo
 
 在我们需要以 root 权限运行某些程序时，实际上就在使用 sudo
 
@@ -693,7 +697,9 @@ echo 500 | sudo tee brightness
 
 因为在打开 brightness 时，使用了 root 权限（之前不行是因为你依旧是在使用用户权限去打开文件）
 
-# Exercises
+---
+
+## Exercises
 
 - For this course, you need to be using a Unix shell like Bash or ZSH. If you are on Linux or macOS, you don’t have to do anything special. If you are on Windows, you need to make sure you are not running cmd.exe or PowerShell; you can use <u>Windows Subsystem for Linux</u> or a Linux virtual machine to use Unix-style command-line tools. To make sure you’re running an appropriate shell, you can try the command `echo $SHELL`. If it says something like `/bin/bash` or `/usr/bin/zsh`, that means you’re running the right program.
 
@@ -733,6 +739,8 @@ curl --head --silent https://missing.csail.mit.edu
 ![](static/P9I9b4ClnoHPVMxYIZacQCODndf.png)
 
 ![](static/IkImbsgw8oMbdsxX1vBc4dxvngf.png)
+
+所以你可以看到，在使用 sh 来运行后边程序时，实际上我们只是读取了后边程序文件的内容，而不是真正执行了后边的程序，所以并不会出现权限问题。
 
 - Use `|` and `>` to write the “last modified” date output by `semester` into a file called `last-modified.txt` in your home directory.
 
