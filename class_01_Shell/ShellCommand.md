@@ -259,7 +259,7 @@ tulei@tulei:~$
 
 ---
 
-### 导航操作：pwd、ls、cd、find
+### 导航操作：pwd、ls、cd、find、grep
 
 #### pwd
 
@@ -323,6 +323,21 @@ drwxr-xr-x  14 root root    4096 Jan  7  2025 usr
 drwxr-xr-x  13 root root    4096 Jan  7  2025 var
 ```
 
+#### ==tree==
+
+因为 ls 一步步搜索过于丑陋，有一种简单的插件：tree，这是他的效果：
+
+```bash
+tulei@tulei:~$ tree
+.
+└── test
+    ├── aaa.md
+    ├── example.sh
+    └── example_1.sh
+
+1 directory, 3 files
+```
+
 #### cd
 
 ```bash
@@ -358,6 +373,11 @@ tulei@tulei:/dev$ cd -
 ```
 
 
+#### ==nnn==
+
+一层层挪动太慢，而记住路径又太困难，所有有了这个插件，只需要输入nnn，就可以利用上下左右来快速在不同文件之间切换
+
+
 #### find
 
 find 使用时记得加 . -name,并且，后边名称部分可以使用[[ShellScript#通配符]]中的`*`或者`?`来进行模糊查找 
@@ -386,6 +406,59 @@ tulei@tulei:~$ find . -name hello_1.txt
 可以结合修改时间来查找：`-mtime -1`表示在最近一天之内修改过的东西
 
 在找到之后，可以结合 `-exec rm {} \;`来删除所有你找到的文件
+
+#### ==fd==
+
+为方便查找，我下载了fd，他更简便一些
+
+```bash
+tulei@tulei:~$ ls
+test
+tulei@tulei:~$ ls test
+aaa.md  example.sh  example_1.sh
+tulei@tulei:~$ fd exampl*
+test/example.sh
+test/example_1.sh
+```
+
+#### grep
+
+有时你并不只是想找到文件，而是想定位文字(注意grep后边之只能是文件而不能是文件夹)：
+
+```bash
+tulei@tulei:~$ ls
+test
+tulei@tulei:~$ grep foobar test
+grep: test: Is a directory
+tulei@tulei:~$ ls test
+aaa.md  example.sh  example_1.sh
+tulei@tulei:~$ grep foobar ./test/*
+./test/aaa.md:aaa# foobar
+./test/example.sh:    grep foobar "$file" > /dev/null 2> /dev/null   
+./test/example.sh:        echo "File $file doed not have any foobar"
+./test/example.sh:        echo "# foobar" >> "$file"
+tulei@tulei:~$ 
+```
+
+#### ==rg==
+
+由于grep可能不会自动排除二进制文件等一系列配置文件，我下载了rg，他更方便：
+
+```bash
+tulei@tulei:~$ rg foobar
+test/aaa.md
+1:aaa# foobar
+
+test/example.sh
+9:    grep foobar "$file" > /dev/null 2> /dev/null   
+12:        echo "File $file doed not have any foobar"
+13:        echo "# foobar" >> "$file"
+tulei@tulei:~$ 
+```
+
+-C  2可以展示上下两行
+-u 是不忽略隐藏文件
+-t 是文件的后缀
 
 ---
 
@@ -554,6 +627,20 @@ tulei@tulei:~$
 实际上你可以意识到,shell 通过对 stream 的操作,可以实现不同程序之间的交互
 
 pipe 不只可以用来处理文本,他也可以被用来处理二进制图片,甚至视频
+
+---
+### 找到之前运行过的命令：
+
+- 上下箭头：慢慢翻
+- history 命令可以打印历史记录
+- history 利用管道（|）结合grep
+```bash
+tulei@tulei:~$ history | grep convert
+  544  tldr convert
+  591  history | grep convert
+```
+- CTRL + R ：倒着从后往前搜索你使用过多命令（不断按ctrl + R 就可以不断回溯）
+- fzf：一种动态的模糊搜索，你可以把输出的管道接到他这里，然后就可以动态模糊搜索
 
 ---
 ### sudo
