@@ -8,8 +8,6 @@ tags:
 [菜鸟教程](https://www.runoob.com/linux/linux-shell.html)
 ## 什么是bash？
 
-![[Pasted image 20251110234111.png]]
-
 我们通常所说的bash和shell script之间的关系可以这样理解：
 
 1. shell是一个统称，它是一种命令行解释器，提供了用户与操作系统内核交互的界面。
