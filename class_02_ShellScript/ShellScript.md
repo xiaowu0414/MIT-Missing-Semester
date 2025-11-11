@@ -399,16 +399,16 @@ A sample output would look like this
 
 	- 这里在给出正确答案之前先给一种错解：
 		我写了以下 .sh 脚本，尽管分条在命令行中执行每一条命令可以达到移动位置的效果，但直接运行脚本并不能完成转换：
-		![](attachments/Pasted%20image%2020251111230717.png)
+![](attachments/Pasted%20image%2020251111230717.png)
 		分别执行：
-		![](attachments/Pasted%20image%2020251111230815.png)
+![](attachments/Pasted%20image%2020251111230815.png)
 	- 这里错误是因为：  ==当你在命令行中逐行执行时，cd命令会改变当前shell的目录。但是，当你运行脚本时，脚本是在一个子shell中执行的，cd命令只会改变子shell的当前目录，而不会影响父shell（即你当前的终端）。因此，脚本执行完毕后，子shell结束，你回到父shell，目录自然没有改变。==
 	- 解决方案：使用`source` 或 `.` 在当前shell中加载函数，之后在当前shell中执行即可
 
 	正解：
-	![](attachments/Pasted%20image%2020251111231905.png)
+![](attachments/Pasted%20image%2020251111231905.png)
 	函数运行演示：
-	![](attachments/Pasted%20image%2020251111232112.png)
+![](attachments/Pasted%20image%2020251111232112.png)
 
 - Say you have a command that fails rarely. In order to debug it you need to capture its output but it can be time consuming to get a failure run. Write a bash script that runs the following script until it fails and captures its standard output and error streams to files and prints everything at the end. Bonus points if you can also report how many runs it took for the script to fail.
 
