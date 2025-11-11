@@ -1,9 +1,11 @@
-# Shell Command
+---
+date: 2025-11-11
+tags:
+  - Shell
+---
 
 其他学习笔记：[学习笔记汇总](https://mcnuuzg9cgrt.feishu.cn/wiki/IafgwclaUiMVkBkkOCXcjLKinuc?from=from_copylink)
-
 [the-art-of-command-line](https://github.com/jlevy/the-art-of-command-line/blob/master/README-zh.md)
-
 [https://explainshell.com/](https://explainshell.com/)
 
 ## Linux 简单介绍
@@ -380,7 +382,7 @@ tulei@tulei:/dev$ cd -
 
 #### find
 
-find 使用时记得加 . -name,并且，后边名称部分可以使用[[ShellScript#通配符]]中的`*`或者`?`来进行模糊查找 
+find 使用时记得加 . -name,并且，后边名称部分可以使用[ShellScript#通配符](../class_02_ShellScript/ShellScript.md#通配符)中的`*`或者`?`来进行模糊查找 
 
 ```shell
 tulei@tulei:~$ ls
@@ -405,7 +407,26 @@ tulei@tulei:~$ find . -name hello_1.txt
 
 可以结合修改时间来查找：`-mtime -1`表示在最近一天之内修改过的东西
 
+```bash
+# Find all directories named src
+find . -name src -type d
+# Find all python files that have a folder named test in their path
+find . -path '*/test/*.py' -type f
+# Find all files modified in the last day
+find . -mtime -1
+# Find all zip files with size in range 500k to 10M
+find . -size +500k -size -10M -name '*.tar.gz'
+```
+
 在找到之后，可以结合 `-exec rm {} \;`来删除所有你找到的文件
+
+```bash
+# Delete all files with .tmp extension
+find . -name '*.tmp' -exec rm {} \;
+
+# Find all PNG files and convert them to JPG
+find . -name '*.png' -exec magick {} {}.jpg \;
+```
 
 #### ==fd==
 
@@ -459,6 +480,17 @@ tulei@tulei:~$
 -C  2可以展示上下两行
 -u 是不忽略隐藏文件
 -t 是文件的后缀
+
+```bash
+# Find all python files where I used the requests library
+rg -t py 'import requests'
+# Find all files (including hidden files) without a shebang line
+rg -u --files-without-match "^#\!"
+# Find all matches of foo and print the following 5 lines
+rg foo -A 5
+# Print statistics of matches (# of matched lines and files )
+rg --stats PATTERN
+```
 
 ---
 

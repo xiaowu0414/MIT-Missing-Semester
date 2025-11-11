@@ -203,6 +203,8 @@ tulei@tulei:~/test$ $?
 
 实际上可以进行**逻辑运算**
 
+The `true` program will always have a 0 return code and the `false` command will always have a 1 return code
+
 ```bash
 tulei@tulei:~/test$ false
 tulei@tulei:~/test$ $?
@@ -270,6 +272,8 @@ tulei@tulei:~/test$
 
 **案例**：记得去回顾以下$后加不同符号，代表什么
 
+**在bash中执行比较时，尽量使用双括号[[ ]]而不是简单括号[ ]。以降低出错的概率**
+
 ```shell
 #!/bin/bash
 
@@ -300,12 +304,13 @@ File aaa.md doed not have any foobar
 aaa.md没有“foobar”这个词组，就为他后边添加了"# foobar"这个词组
 
 ---
-### 通配符
+### 通配符globbing
 
 从上边的例子我们发现，实际上如果每次输入时都需要完整输入所有参数，是有点丑陋的，所以，我们介绍通配符，他允许批量确定参数
 
-- `？`用于替代 **一个** 你不是很清楚的字符：
+- `？`用于替代 **一个** 你不是很清楚的字符
 - `*` 用于替代你不知道的 **任意多个** 字符
+- `{}` 用于在给定的几个可选项里寻找
 
 你可以把`*`理解为一个万能的替换符号，不论什么不知道时，都可以用它换掉
 
@@ -342,7 +347,31 @@ test/aaa.md
 tulei@tulei:~$ 
 ```
 
+`{}` 的使用：
 
+```bash
+convert image.{png,jpg}
+# Will expand to
+convert image.png image.jpg
+```
 
+---
+## 与其他语言结合
 
+Note that scripts need not necessarily be written in bash to be called from the terminal. For instance, here’s a simple Python script that outputs its arguments in reversed order:
 
+```bash
+#!/usr/local/bin/python
+import sys
+for arg in reversed(sys.argv[1:]):
+    print(arg)
+```
+
+The kernel knows to execute this script with a python interpreter instead of a shell command because we included a [shebang](https://en.wikipedia.org/wiki/Shebang_\(Unix\)) line at the top of the script. It is good practice to write shebang lines using the [`env`](https://www.man7.org/linux/man-pages/man1/env.1.html) command that will resolve to wherever the command lives in the system, increasing the portability of your scripts. To resolve the location, `env` will make use of the `PATH` environment variable we introduced in the first lecture. For this example the shebang line would look like `#!/usr/bin/env python`.
+
+Some differences between shell functions and scripts that you should keep in mind are:
+
+- Functions have to be in the same language as the shell, while scripts can be written in any language. This is why including a shebang for scripts is important.
+- Functions are loaded once when their definition is read. Scripts are loaded every time they are executed. This makes functions slightly faster to load, but whenever you change them you will have to reload their definition.
+- Functions are executed in the current shell environment whereas scripts execute in their own process. Thus, functions can modify environment variables, e.g. change your current directory, whereas scripts can’t. Environment variables which have been exported using [`export`](https://www.man7.org/linux/man-pages/man1/export.1p.html) are passed by value to scripts.
+- As with any programming language, functions are a powerful construct to achieve modularity, code reuse, and clarity of shell code. Often shell scripts will include their own function definitions.
