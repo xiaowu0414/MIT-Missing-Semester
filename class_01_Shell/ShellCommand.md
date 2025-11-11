@@ -157,7 +157,27 @@ Man 会直接打开完整文档：（按 q 即可退出文档的查看）
 tulei@tulei:~$ man pwd
 ```
 
-我已经为Ubuntu下载了开源的 tldr ,他会比man输出更具体一点的示例，方便阅读与使用
+我已经为Ubuntu下载了开源的 `tldr` ,他会输出更具体一点的示例，方便阅读与使用
+
+```bash
+tulei@tulei:~$ tldr pwd
+
+  pwd
+
+  Print the name of current/working directory.
+  More information: https://www.gnu.org/software/coreutils/manual/html_node/pwd-invocation.html.
+
+  - Print the current directory:
+    pwd
+
+  - Print the current directory, and resolve all symlinks (i.e. show the "physical" path):
+    pwd --physical
+
+  - Display help:
+    pwd --help
+
+Found 1 page with the same name under the platform: windows.
+```
 
 ---
 ### 基本信息的查看：
