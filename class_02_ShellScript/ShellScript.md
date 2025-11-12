@@ -444,6 +444,41 @@ Write bash functions `marco` and `polo` that do the following. Whenever you 
  echo "Everything went according to plan"
 ```
 
+脚本代码：
+
+```bash
+#!/bin/bash 
+
+name=$1
+declare -i step
+step=$2
+
+echo "Running ${name} until failure (max ${step} times)"
+
+arr=()
+i=0
+
+while [[ $i -lt $step ]]; do
+    echo "Attempt $((i+1)):"
+    # 运行脚本
+    if ./"$name"; then
+        arr[i]=0
+        echo "✓ Success"
+    else
+        arr[i]=$?
+        echo "✗ Failed with code ${arr[i]}"
+        break
+    fi
+    ((i++))
+    echo "---"
+done
+  
+echo "Total runs: ${#arr[@]}"
+```
+
+运行效果：
+![](attachments/Pasted%20image%2020251112151828.png)
+
 ### Exercise 4
 
 As we covered in the lecture `find`’s `-exec` can be very powerful for performing operations over the files we are searching for. However, what if we want to do something with **all** the files, like creating a zip file? As you have seen so far commands will take input from both arguments and STDIN. When piping commands, we are connecting STDOUT to STDIN, but some commands like `tar` take inputs from arguments. To bridge this disconnect there’s the [`xargs`](https://www.man7.org/linux/man-pages/man1/xargs.1.html) command which will execute a command using STDIN as arguments. For example `ls | xargs rm` will delete the files in the current directory.
@@ -452,7 +487,37 @@ Your task is to write a command that recursively finds all HTML files in the fol
 
 If you’re on macOS, note that the default BSD `find` is different from the one included in [GNU coreutils](https://en.wikipedia.org/wiki/List_of_GNU_Core_Utilities_commands). You can use `-print0` on `find` and the `-0` flag on `xargs`. As a macOS user, you should be aware that command-line utilities shipped with macOS may differ from the GNU counterparts; you can install the GNU versions if you like by [using brew](https://formulae.brew.sh/formula/coreutils).
 
+![](attachments/Pasted%20image%2020251112155606.png)
+
+在通道 | 前的 ```-print0``` 表示：将找到的所有路径，以null作为分隔，然后输出
+在通道 | 后的 ```-0``` 表示：以null作为分隔，将输入划分后给后边的脚本
+
+![](attachments/Pasted%20image%2020251112155811.png)
+
+第一个报错：
+- 这是因为 `find`命令使用了 `-print0`，它会用空字符（NUL）分隔找到的文件名，但是 `xargs`默认使用空白字符（空格、换行等）作为分隔符。所以当文件名中包含空格时，就会出错。
+
+第二个报错：
+- `find`命令没有使用 `-print0`，所以输出是用换行分隔的，但是 `xargs`使用了 `-0`选项，表示期望用空字符分隔输入。这样不匹配，导致 `xargs`将整个文件列表当作一个文件名处理，因为中间有空格，所以被拆成了多个不存在的文件。
+-  另外，您可能已经注意到，第二个命令中，`xargs -0`期望的是以空字符分隔的输入，但是 `find`默认使用换行分隔，所以不匹配。
+
+为什么要使用空字符（NUL）分隔，而不用默认的分隔呢？
+- 默认分隔无法识别文件名中的空格，如下图中的 “aaa  a.html”
+
+![](attachments/Pasted%20image%2020251112160540.png)
+
 ### Exercise 5
 
 -  (Advanced) Write a command or script to recursively find the most recently modified file in a directory. More generally, can you list all files by recency?
 
+```bash
+find . -type f -exec ls -lth {} + | head -10
+```
+
+```find . type f ```：递归查找当前目录下所有文件
+```-exec ls -lth``` : 将找到的文件用 ls 排列，-lth 表示，详细，按时间顺序，人类可读
+```{} ``` ：是占位符号，这里是将 find . type f 找到的文件填入
+```+```：表示占位符中有很多内容，需要一次性扔给 ls 执行
+```head -10```：列出前10个
+
+![](attachments/Pasted%20image%2020251112161946.png)
