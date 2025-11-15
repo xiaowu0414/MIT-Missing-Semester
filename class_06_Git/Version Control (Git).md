@@ -358,4 +358,5 @@ To avoid duplicating information, we’re not going to explain the commands belo
 7.  Fork the [repository for the class website](https://github.com/missing-semester/missing-semester), find a typo or some other improvement you can make, and submit a pull request on GitHub (you may want to look at [this](https://github.com/firstcontributions/first-contributions)). Please only submit PRs that are useful (don’t spam us, please!). If you can’t find an improvement to make, you can skip this exercise.  
     请 fork [课程网站的仓库](https://github.com/missing-semester/missing-semester) ，找出拼写错误或其他可以改进的地方，然后在 GitHub 上提交 pull request（您可以参考[这里](https://github.com/firstcontributions/first-contributions) ）。请只提交有用的 PR（请勿发送垃圾信息！）。如果您找不到任何可以改进的地方，可以跳过此练习。
 
+
 * * *

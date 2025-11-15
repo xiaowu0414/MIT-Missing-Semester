@@ -1,12 +1,8 @@
-[./missing-semester](/) 
-
-[lectures](/2020/) [about](/about/)
-
-  
-[./missing-semester](/)
-
-[关于](/about/)[讲座](/2020/)
-
+---
+date: 2025-11-15
+tags:
+  - regular_expressions
+---
 # Data Wrangling  数据整理
 
 Have you ever wanted to take data in one format and turn it into a different format? Of course you have! That, in very general terms, is what this lecture is all about. Specifically, massaging data, whether in text or binary format, until you end up with exactly what you wanted.  
