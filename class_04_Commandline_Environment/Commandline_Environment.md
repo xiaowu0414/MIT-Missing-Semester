@@ -9,7 +9,7 @@ tags:
 
 shell 使用一种称为信号（signal） 的 UNIX 通信机制来向进程传递信息。大多数情况下，您可以按 Ctrl-C 来停止命令.按下 Ctrl-C 会提示 shell 向进程发送 SIGINT 信号。
 
-这是一个最简单的 Python 程序示例，它可以捕获 SIGINT 并忽略它，不再停止运行。现在，我们可以通过输入 Ctrl-\ 来使用 SIGQUIT 信号终止此程序。
+这是一个最简单的 python 程序示例，它可以捕获 sigint 并忽略它，不再停止运行。现在，我们可以通过输入 ctrl-\ 来使用 sigquit 信号终止此程序。
 
 ```python
 #!/usr/bin/env python
@@ -186,6 +186,7 @@ tmux expects you to know its keybindings, and they all have the form `<C-b> x` w
 
 For further reading, [here](https://hamvocke.com/blog/a-quick-and-easy-guide-to-tmux/) is a quick tutorial on tmux and [this](http://linuxcommand.org/lc3_adv_termmux.php) has a more detailed explanation that covers the original screen command. You might also want to familiarize yourself with [screen](https://www.man7.org/linux/man-pages/man1/screen.1.html), since it comes installed in most UNIX systems.
 
+---
 ## Aliases
 
 输入包含大量标志或冗长选项的长命令可能会很麻烦。因此，大多数 shell 都支持别名 。shell 别名是另一个命令的简写形式，shell 会自动将其替换为你实际使用的命令。例如，bash 中的别名结构如下：
@@ -228,7 +229,209 @@ alias ll
 # Will print ll='ls -lh'
 ```
 
+这种映射并不会永久从在，而如果每次打开新的terminal都要再输入一遍也不方便，所以下一节会介绍一种方法，可以解决这个问题。
+
+---
 ## Dotfiles
+
+对于 bash ，在大多数系统中，编辑 .bashrc 或 .bash_profile 文件即可。您可以在这里添加希望在启动时运行的命令，例如我们刚才提到的别名，或者修改 PATH 环境变量。实际上，许多程序都会要求您在 shell 配置文件中添加类似 `export PATH="$PATH:/path/to/program/bin"` 的行，以便找到它们的二进制文件。
+
+为了让不同机器可以共用一套配置文件，实际上你可以使用 if else 等语句来进行细微的处理：
+
+```bash
+if [[ "$(uname)" == "Linux" ]]; then {do_something}; fi
+
+# Check before using shell-specific features
+if [[ "$SHELL" == "zsh" ]]; then {do_something}; fi
+
+# You can also make it machine-specific
+if [[ "$(hostname)" == "myServer" ]]; then {do_something}; fi
+```
+
+甚至你也可以让不同的软件 比如 bash 与 zsh ，共享同一套 Alianses 规则。
+
+```bash
+# Test if ~/.aliases exists and source it
+if [ -f ~/.aliases ]; then
+    source ~/.aliases
+fi
+```
+
+---
+## Remote Machines
+
+如今，程序员在日常工作中越来越频繁地使用远程服务器。如果您需要使用远程服务器部署后端软件，或者需要一台计算能力更强的服务器，最终都会用到安全外壳协议 (SSH)。与大多数工具一样，SSH 具有高度可配置性，因此值得学习。
+
+### Executing commands 
+
+实际上可以通过对管道位置的调整，来调整传输与执行所需要的花费。
+
+An often overlooked feature of ssh is the ability to run commands directly. `ssh foobar@server ls` will execute `ls` in the home folder of foobar. It works with pipes, so `ssh foobar@server ls | grep PATTERN` will grep locally the remote output of `ls` and `ls | ssh foobar@server grep PATTERN` will grep remotely the local output of `ls`.
+
+### Key generation
+
+密钥生成可以使用下边的命令：
+
+```bash
+ssh-keygen -a 100 -t ed25519 -f ~/.ssh/id_ed25519
+```
+
+使用如下命令检查是否已经有生成的密钥：
+
+```bash
+ ssh-keygen -y -f /path/to/key
+```
+
+`ssh+tee`, the simplest is to use ssh command execution and STDIN input by doing `cat localfile | ssh remote_server tee serverfile`. Recall that `tee` writes the output from STDIN into a file.
+`scp` when copying large amounts of files/directories, the secure copy `scp` command is more convenient since it can easily recurse over paths. The syntax is `scp path/to/local_file remote_host:path/to/remote_file`
+`rsync` improves upon scp by detecting identical files in local and remote, and preventing copying them again. It also provides more fine grained control over symlinks, permissions and has extra features like the --partial flag that can resume from a previously interrupted copy. `rsync` has a similar syntax to `scp`.
+
+---
+
+## Exercises
+
+### Job control
+##### 1
+-  From what we have seen, we can use some ps aux | grep commands to get our jobs’ pids and then kill them, but there are better ways to do it. Start a sleep 10000 job in a terminal, background it with Ctrl-Z and continue its execution with bg. Now use pgrep to find its pid and pkill to kill it without ever typing the pid itself. (Hint: use the -af flags).
+
+```bash
+tulei@tulei:~$ jobs
+tulei@tulei:~$ sleep 10000
+^Z
+[1]+  Stopped                 sleep 10000
+tulei@tulei:~$ bg
+[1]+ sleep 10000 &
+tulei@tulei:~$ pgrep -af sleep
+174393 sleep 10000
+tulei@tulei:~$ pkill sleep
+[1]+  Terminated              sleep 10000
+tulei@tulei:~$ jobs
+```
+
+##### 2
+- Say you don’t want to start a process until another completes. How would you go about it? In this exercise, our limiting process will always be sleep 60 &. One way to achieve this is to use the wait command. Try launching the sleep command and having an ls wait until the background process finishes.
+
+ 在后台工作的程序并不会阻碍前台程序的工作，而在前台运行的程序却会造成阻碍：
+ 
+```bash
+tulei@tulei:~$ jobs
+tulei@tulei:~$ sleep 60 
+ls
+tulei@tulei:~$ ls
+snap  test_0
+tulei@tulei:~$ sleep 60 &
+[1] 175471
+tulei@tulei:~$ ls
+snap  test_0
+tulei@tulei:~$ jobs
+[1]+  Running                 sleep 60 &
+```
+
+```bash
+tulei@tulei:~$ sleep 60 &
+[1] 175752
+tulei@tulei:~$ wait 175752
+ls
+[1]+  Done                    sleep 60
+tulei@tulei:~$ ls
+snap  test_0
+tulei@tulei:~$ jobs
+tulei@tulei:~$ 
+```
+
+ - However, this strategy will fail if we start in a different bash session, since wait only works for child processes. One feature we did not discuss in the notes is that the kill command’s exit status will be zero on success and nonzero otherwise. kill -0 does not send a signal but will give a nonzero exit status if the process does not exist. Write a bash function called pidwait that takes a pid and waits until the given process completes. You should use sleep to avoid wasting CPU unnecessarily.
+
+函数：
+```bash
+#!/bin/sh
+pidwait() {
+    pid=$1
+
+    while kill -0 "$pid" 2>/dev/null; do
+        sleep 5
+        echo "The process $pid is still running..."
+    done
+
+    echo "Process $pid has completed."
+}
+```
+
+运行效果：
+```bash
+tulei@tulei:~/test_0$ sleep 30 &
+[1] 177144
+tulei@tulei:~/test_0$ pidwait $!
+The process 177144 is still running...
+The process 177144 is still running...
+The process 177144 is still running...
+The process 177144 is still running...
+The process 177144 is still running...
+[1]+  Done                    sleep 30
+The process 177144 is still running...
+Process 177144 has completed.
+tulei@tulei:~/test_0$ 
+```
+### Terminal multiplexer
+ 
+- Follow this tmux[tutorial](https://hamvocke.com/blog/a-quick-and-easy-guide-to-tmux/) and then learn how to do some basic customizations following these [steps](https://hamvocke.com/blog/a-guide-to-customizing-your-tmux-conf/).
+### Aliases
+
+- Create an alias dc that resolves to cd for when you type it wrong.
+
+```bash
+alias dc="cd"
+```
+
+- Run `history | awk '{$1="";print substr($0,2)}' | sort | uniq -c | sort -n | tail -n 10` to get your top 10 most used commands and consider writing shorter aliases for them. Note: this works for Bash; if you’re using ZSH, use history 1 instead of just history.
+
+```bash
+tulei@tulei:~$ history | awk '{$1="";print substr($0,2)}' | sort | uniq -c | sort -n | tail -n 10
+     10 cd ..
+     10 tmux
+     10 tree
+     11 %1
+     11 python3 sigint.py
+     12 bg
+     12 exit
+     34 vim
+     36 jobs
+    145 ls
+```
+
+### Dotfiles
+ 
+- Let’s get you up to speed with dotfiles.
+
+Create a folder for your dotfiles and set up version control.
+Add a configuration for at least one program, e.g. your shell, with some customization (to start off, it can be something as simple as customizing your shell prompt by setting $PS1).
+Set up a method to install your dotfiles quickly (and without manual effort) on a new machine. This can be as simple as a shell script that calls ln -s for each file, or you could use a specialized utility.
+Test your installation script on a fresh virtual machine.
+Migrate all of your current tool configurations to your dotfiles repository.
+Publish your dotfiles on GitHub.
+
+### Remote Machines
+
+- Install a Linux virtual machine (or use an already existing one) for this exercise. If you are not familiar with virtual machines check out this tutorial for installing one.
+
+- Go to ~/.ssh/ and check if you have a pair of SSH keys there. If not, generate them with ssh-keygen -a 100 -t ed25519. It is recommended that you use a password and use ssh-agent , more info here.
+Edit .ssh/config to have an entry as follows
+
+ Host vm
+     User username_goes_here
+     HostName ip_goes_here
+     IdentityFile ~/.ssh/id_ed25519
+     LocalForward 9999 localhost:8888
+Use ssh-copy-id vm to copy your ssh key to the server.
+Start a webserver in your VM by executing python -m http.server 8888. Access the VM webserver by navigating to http://localhost:9999 in your machine.
+Edit your SSH server config by doing sudo vim /etc/ssh/sshd_config and disable password authentication by editing the value of PasswordAuthentication. Disable root login by editing the value of PermitRootLogin. Restart the ssh service with sudo service sshd restart. Try sshing in again.
+(Challenge) Install mosh in the VM and establish a connection. Then disconnect the network adapter of the server/VM. Can mosh properly recover from it?
+(Challenge) Look into what the -N and -f flags do in ssh and figure out a command to achieve background port forwarding.
+
+
+
+
+
+
 
 
 

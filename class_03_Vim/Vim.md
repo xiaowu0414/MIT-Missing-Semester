@@ -206,5 +206,16 @@ NOTE:  If you want to ignore case for just one search command, use  \c
 这里介绍几种插件，方便命令行中，Vim的使用。
 -  [CtrlP](https://github.com/ctrlpvim/ctrlp.vim)：用于模糊查找（我已经将其快捷键设为Ctrl+p）
 - [Vim.Ack](https://github.com/mileszs/ack.vim?tab=readme-ov-file)：用于查找文件内容（在命令行中输入：:Ack [options] {pattern} [{directories}]）
-	- 
+- [easymotion](https://github.com/easymotion/vim-easymotion?tab=readme-ov-file)：在文档内快速移动（使用 `\ w` 开始）
+
+
+
+
+
+
+
+
+
+
+
 
