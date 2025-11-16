@@ -3,18 +3,28 @@ date: 2025-11-11
 tags:
   - Shell
 ---
+简单介绍linux: [linuxjourney.com](https://labex.io/linuxjourney) 
+命令行的一些实用技巧：[the-art-of-command-line](https://github.com/jlevy/the-art-of-command-line/blob/master/README-zh.md)
+命令的解释：[https://explainshell.com/](https://explainshell.com/)
 
-其他学习笔记：[学习笔记汇总](https://mcnuuzg9cgrt.feishu.cn/wiki/IafgwclaUiMVkBkkOCXcjLKinuc?from=from_copylink)
-[the-art-of-command-line](https://github.com/jlevy/the-art-of-command-line/blob/master/README-zh.md)
-[https://explainshell.com/](https://explainshell.com/)
+因为自己计算机目前是 Windows，所以这节课我会通过 wsl2，利用 Windows 上的 Ubuntu 22.04子系统来完成。
 
+ssh部分链接的是VMware上的Ubuntu24.04
+
+对 wsl2 不了解的可以去看：[https://www.bilibili.com/video/BV1ce46ziE1r/?spm_id_from=333.337.search-card.all.click](https://www.bilibili.com/video/BV1ce46ziE1r/?spm_id_from=333.337.search-card.all.click)
 ## Linux 简单介绍
 
 在介绍 Shell 之前，先对 Linux 做简单介绍，以便后续学习
 
-因为自己计算机目前是 Windows，所以这节课我会利用 wsl2，在 Windows 上的 Ubuntu 子系统来完成
+Linux 是在GNU 的基础上 完善得到的，GNU当时并没有及时完成自己的Kernal
 
-对 wsl2 不了解的可以去看：[https://www.bilibili.com/video/BV1ce46ziE1r/?spm_id_from=333.337.search-card.all.click](https://www.bilibili.com/video/BV1ce46ziE1r/?spm_id_from=333.337.search-card.all.click)
+The kernel is the core component of an operating system. It acts as a bridge, allowing the hardware to communicate with the software. The kernel manages system resources, such as the CPU, memory, and peripheral devices. Essentially, the kernel controls everything that happens on your system.
+
+A Linux system is divided into three main parts:
+
+- **Hardware** - This includes the physical components of your computer, such as the CPU, memory, and storage devices.
+- **Linux Kernel** - As the core of the operating system, the kernel manages the hardware and facilitates communication between software and hardware.
+- **User Space** - This is the environment where you, the user, interact with the system through applications and command-line interfaces.
 
 ### Linux 系统目录结构：
 
@@ -106,6 +116,15 @@ tmpfs          tmpfs    4.8G  4.0K  4.8G   1% /run/user/1000
 
 ## Shell 命令简单演示
 
+1. shell是一个统称，它是一种命令行解释器，提供了用户与操作系统内核交互的界面。
+2. bash（Bourne-Again SHell）是shell的一种，是许多Linux发行版和macOS（在较新版本中已改为zsh，但bash仍常见）默认的shell。
+
+当你第一次打开时，屏幕上一般会有以下内容：
+
+```bash
+username@hostname:current_directory$
+```
+
 ### Linux 命令
 
 Shell 是用 C 语言编写好的程序，用户可以用它来使用 Linux
@@ -128,11 +147,45 @@ Linux 命令的通用命令格式  ：命令字  [选项]  [参数]
 参数：命令操作的对象，如文件、目录名等
 
 ---
-### Help & man & tldr
+### 查询命令用法 
+
+#### type
+会告诉你命令的类型
+
+```bash
+tulei@tulei:~$ type cd
+cd is a shell builtin
+tulei@tulei:~$ type ll
+ll is aliased to `ls -alF'
+tulei@tulei:~$ type ls
+ls is aliased to `ls --color=auto'
+```
+
 
 在开始之前，先介绍 --help 以及 man 。在你遇到任何困难时，查看帮助文档往往可以快速解决问题
 
---help 会打开简短的帮助文档：
+#### help
+
+help command·可以打开对应的帮助文档；
+
+```bash
+tulei@tulei:~$ help pwd
+pwd: pwd [-LP]
+    Print the name of the current working directory.
+    
+    Options:
+      -L        print the value of $PWD if it names the current working
+                directory
+      -P        print the physical directory, without any symbolic links
+    
+    By default, `pwd' behaves as if `-L' were specified.
+    
+    Exit Status:
+    Returns 0 unless an invalid option is given or the current directory
+    cannot be read.
+```
+
+command --help 也可以：
 
 ```shell
 tulei@tulei:~$ pwd --help
@@ -151,11 +204,15 @@ pwd: pwd [-LP]
     cannot be read.
 ```
 
-Man 会直接打开完整文档：（按 q 即可退出文档的查看）
+#### man
+
+会直接打开完整文档：（按 q 即可退出文档的查看）
 
 ```shell
 tulei@tulei:~$ man pwd
 ```
+
+#### tldr 
 
 我已经为Ubuntu下载了开源的 `tldr` ,他会输出更具体一点的示例，方便阅读与使用
 
@@ -179,17 +236,105 @@ tulei@tulei:~$ tldr pwd
 Found 1 page with the same name under the platform: windows.
 ```
 
+#### whatis 
+
+如果你觉得前边的文档内容都太长了，想要简短了提醒，可以使用whatis，他会输出help文档中 name 边上的一句话：
+
+```bash
+tulei@tulei:~$ whatis pwd
+pwd (1)              - print name of current/working directory
+```
+
+#### which
+
+告诉你当前使用的命令在哪里可以找到，（当你同一个命令有很多可能的路径时，这个命令是很有用的）
+```bash
+ulei@tulei:~$ which tldr
+/snap/bin/tldr
+```
+
+which -a : 输出你所有下载过的 命令的地址
+```bash
+tulei@tulei:~$ which -a tldr
+/snap/bin/tldr
+/snap/bin/tldr
+/snap/bin/tldr
+/snap/bin/tldr
+```
+
+which 只能输出 $PATH 中的命令，如果你的命令不在系统路径中，可以使用如下命令将其加入系统路径，推荐将其写在 bashrc 中：
+
+```bash
+export PATH=~/.local/bin:$PATH
+```
+
+#### whereis
+
+查找命令的 可执行文件，操作手册，以及来源
+
+```bash
+tulei@tulei:~$ whereis pwd
+pwd: /usr/bin/pwd /usr/share/man/man1/pwd.1.gz
+tulei@tulei:~$ which pwd
+/usr/bin/pwd
+tulei@tulei:~$ which -a pwd
+/usr/bin/pwd
+/bin/pwd
+```
+
+-b ： 只搜索 二进制 可执行文件
+-m : 只搜索 手册
+-s : 搜索原文件
+
 ---
-### 基本信息的查看：
+### 基本信息的查看与简单计算：
 
-接下来介绍几种你可能会用到的信息，当然，实际上往往并不不常用
-
-#### whoami:
-
+#### date:
 ```shell
-#输出用户身份
-tulei@tulei:~$ whoami
-tulei
+tulei@tulei:~$ date
+Sat Nov  8 14:42:38 CST
+```
+
+#### expr:
+
+数字和符号中间需要有空格
+使用乘法时，需要用转义字符 或者 `''` 来限制 `*` 的含义
+```bash
+tulei@tulei:~$ expr 5 + 3
+8
+tulei@tulei:~$ expr 5+3
+5+3
+tulei@tulei:~$ expr 16 - 9
+7
+tulei@tulei:~$ expr 60 / 5
+12
+tulei@tulei:~$ expr 3 * 11
+expr: syntax error: unexpected argument ‘snap’
+tulei@tulei:~$ expr 3 \* 11
+33
+tulei@tulei:~$ expr 3 "*" 11
+33
+tulei@tulei:~$ expr 3 '*' 11
+33
+```
+
+#### figlet:
+```bash
+tulei@tulei:~$ figlet "I Love Linux"
+ ___   _                     _     _                  
+|_ _| | |    _____   _____  | |   (_)_ __  _   ___  __
+ | |  | |   / _ \ \ / / _ \ | |   | | '_ \| | | \ \/ /
+ | |  | |__| (_) \ V /  __/ | |___| | | | | |_| |>  < 
+|___| |_____\___/ \_/ \___| |_____|_|_| |_|\__,_/_/\_\
+                                                      
+tulei@tulei:~$ figlet -f slant "I Love Linux"
+    ____   __                       __    _                 
+   /  _/  / /   ____ _   _____     / /   (_)___  __  ___  __
+   / /   / /   / __ \ | / / _ \   / /   / / __ \/ / / / |/_/
+ _/ /   / /___/ /_/ / |/ /  __/  / /___/ / / / / /_/ />  <  
+/___/  /_____/\____/|___/\___/  /_____/_/_/ /_/\__,_/_/|_|  
+                                                            
+tulei@tulei:~$ 
 ```
 
 #### Clear:
@@ -198,6 +343,28 @@ tulei
 ```shell
 #清空界面
 ```
+#### whoami:
+
+```shell
+#输出用户身份
+tulei@tulei:~$ whoami
+tulei
+```
+
+#### id:
+- `uid`: Your User ID (a unique numerical identifier).
+- `gid`: Your primary Group ID.
+- `groups`: All the groups you are a member of.
+
+```bash
+tulei@tulei:~$ id
+uid=1000(tulei) gid=1000(tulei) groups=1000(tulei),4(adm),20(dialout),24(cdrom),25(floppy),27(sudo),29(audio),30(dip),44(video),46(plugdev),117(netdev)
+
+# 你也可以查看其他用户id
+tulei@tulei:~$ id root
+uid=0(root) gid=0(root) groups=0(root)
+```
+
 #### uname:
 ```shell
 #查看系统信息
@@ -220,11 +387,17 @@ tulei
 tulei@tulei:~$ hostname testname
 hostname: you must be root to change the host name
 ```
-#### date:
-```shell
-tulei@tulei:~$ date
-Sat Nov  8 14:42:38 CST
-```
+
+#### htop:
+![](attachments/Pasted%20image%2020251116141041.png)
+htop shows:
+
+- Top: CPU and memory usage, as well as how long your computer has been running (uptime).
+- Middle: A list of all the running programs (processes).
+- Bottom: Options for interacting with htop.
+
+记得按 q 退出
+
 ---
 
 ### Echo
@@ -267,7 +440,6 @@ tulei@tulei:~$ which echo
 echo 可以直接将文字写入文档
 
 cat 可以查看文档内容
-
 ```sql
 tulei@tulei:~$ cd ~
 tulei@tulei:~$ ls
@@ -276,12 +448,135 @@ tulei@tulei:~$ ls
 hello.txt
 tulei@tulei:~$ cat hello.txt
 hello
-tulei@tulei:~$
 ```
+
+实际上cat 也可以将两个文件内容拼起来
+
+```bash
+tulei@tulei:~/test_1$ echo "hello" > exampel_1
+tulei@tulei:~/test_1$ echo "world" > exampel_2
+tulei@tulei:~/test_1$ cat exampel_1 exampel_2 > conbin
+tulei@tulei:~/test_1$ cat conbin 
+hello
+world
+```
+
+cat -E 告诉cat在每行末尾加入 $ 分隔
+
+```bash
+tulei@tulei:~/test_1$ cat -E conbin 
+hello$
+world$
+```
+
+cat 还可以为文档内容加上行号，在下文中有介绍
+#### head & tail
+
+使用head 和tail 可以查看指定的行的内容
+
+```bash
+# cat 为内容加上行号
+tulei@tulei:~/test_2$ ls
+hello
+tulei@tulei:~/test_2$ cat hello
+hello
+tulei@tulei:~/test_2$ echo "hello again" >> hello 
+tulei@tulei:~/test_2$ cat hello
+hello
+hello again
+tulei@tulei:~/test_2$ cat -n hello
+     1  hello
+     2  hello again
+
+# 使用head 和 tail
+tulei@tulei:~/test_2$ head -n1 hello
+hello
+tulei@tulei:~/test_2$ head -n2 hello
+hello
+hello again
+tulei@tulei:~/test_2$ tail -n1 hello
+hello again
+tulei@tulei:~/test_2$ tail -n2 hello
+hello
+hello again
+```
+
+可以使用 | 结合 head 与 tail 输出精确的行：
+
+```bash
+tulei@tulei:~/test_2$ echo "hello_3" >> hello
+tulei@tulei:~/test_2$ cat hello 
+hello
+hello again
+hello_3
+tulei@tulei:~/test_2$ cat hello | head -n2 | tail -n1
+hello again
+```
+
+使用 -c 可以查看指定字符
+```bash
+tulei@tulei:~/test_2$ head -c1 hello 
+htulei@tulei:~/test_2$ head -c2 hello 
+hetulei@tulei:~/test_2$ head -c 10 hello
+hello
+helltulei@tulei:~/test_2$ 
+```
+
+#### diff
+
+diff 可以查看两个文件的不同，具体来说，他会告诉你，第一个文件的那些行需要修改，使其可以变成第二个文件，下边例子可以看到：
+1，2c1，2：第一个文件的12两个行需要换成第二个文件的12两行
+4c4：第一个文件的第4行需要换成第二个文件的第4行
+```bash
+tulei@tulei:~/test_2$ cat -n file_1
+     1  this is the first file?
+     2  the first file
+     3  the file
+     4  the first file
+tulei@tulei:~/test_2$ cat -n file_2
+     1  this is the second file!
+     2  the second file
+     3  the file
+     4  the second file
+tulei@tulei:~/test_2$ diff file_1 file_2
+1,2c1,2
+< this is the first file?
+< the first file
+---
+> this is the second file!
+> the second file
+4c4
+< the first file
+---
+> the second file
+```
+
+实际上也可以递归的来对比文件夹的不同，但只会输出有不同的文件：
+```bash
+tulei@tulei:~$ ls
+snap  test_0  test_2
+tulei@tulei:~$ diff -r test_0 test_2
+Only in test_0: TEST
+Only in test_0: aaa
+Only in test_0: fdbug.sh
+Only in test_2: file_1
+Only in test_2: file_2
+Only in test_0: marco_polo_pidwait.sh
+Only in test_0: sigint.py
+Only in test_0: test.sh
+Only in test_0: wher
+```
+
+#### less &  more
+
+当你的文件特别长时，可以使用 more  filename 或者 less filename 打开。
+
+然后使用 space 翻页
+按q退出
 
 ---
 
-### 导航操作：pwd、ls、cd、find、grep
+### 导航操作：
 
 #### pwd
 
@@ -308,15 +603,23 @@ tulei@tulei:/home$ cd tulei
 tulei@tulei:~$ ls ..
 tulei
 
+```
+
+ls -l: 查看具体信息：
+- 信息包括：_文件类型，创建者权限，_所在分组对其权限，_其他人权限，节点，创建时属组(This is the username that owns the file.)，_目前所在分组(A group is a collection of users that can share permissions.)，_大小，最后一次修改日期，名称_
+- 对权限的说明：r可读，w可写，x可执行_
+- 想要进入一个目录的子目录时，需要对父目录和对应的子目录都具有执行权限x
+- 想要对一个目录使用ls 列出他的子目录有哪些，则需要对这个目录有阅读权限r
+- 想阅读一个目录的子文件时，需要对文件有阅读权限r
+
+具体对权限的修改部分可以在后边 对文件的操作 部分看到：
+
+```
 #查看详细的目录信息：ls -l
 tulei@tulei:/$ ls
 bin   dev  home  lib    lib64   lost+found  mnt  proc  run   snap  sys  usr
 boot  etc  init  lib32  libx32  media       opt  root  sbin  srv   tmp  var
-#信息包括：_文件类型，创建者权限，_所在分组对其权限，_其他人权限，节点，创建时属组，_目前所在分组，_大小，最后一次修改日期，名称_
-_#对权限的说明：r可读，w可写，x可执行_
-#想要进入一个目录的子目录时，需要对父目录和对应的子目录都具有执行权限x
-#想要对一个目录使用ls 列出他的子目录有哪些，则需要对这个目录有阅读权限r
-#想阅读一个目录的子文件时，需要对文件有阅读权限r
+
 tulei@tulei:/$ ls -l
 total 2728
 lrwxrwxrwx   1 root root       7 Jan  7  2025 bin -> usr/bin
@@ -345,6 +648,38 @@ drwxr-xr-x  14 root root    4096 Jan  7  2025 usr
 drwxr-xr-x  13 root root    4096 Jan  7  2025 var
 ```
 
+ls -a : 可以查看所有文件：包括隐藏文件
+ls -r : 以相反的顺序查看：
+
+```bash
+tulei@tulei:~$ ls
+snap  test_0  test_1
+tulei@tulei:~$ cd test_1
+tulei@tulei:~/test_1$ ls
+tulei@tulei:~/test_1$ cd ..
+tulei@tulei:~$ ls -a
+.              .bashrc  .gitconfig  .motd_shown  .sudo_as_admin_successful  .vim                       .vscode-server  .zshrc
+..             .cache   .landscape  .npm         .swo                       .viminfo                   .wget-hsts      snap
+.bash_history  .config  .lesshst    .profile     .swp                       .vimrc                     .zcompdump      test_0
+.bash_logout   .dotnet  .local      .ssh         .tmux.conf                 .vscode-remote-containers  .zsh_history    test_1
+tulei@tulei:~$ ls -r
+test_1  test_0  snap
+```
+
+`ls */` 显示当前目录的子目录文件；
+
+```bash
+tulei@tulei:~$ ls */
+snap/:
+tldr
+
+test_0/:
+TEST  aaa  fdbug.sh  marco_polo_pidwait.sh  sigint.py  test.sh  wher
+
+test_1/:
+exampel_1  exampel_2
+```
+
 #### ==tree==
 
 因为 ls 一步步搜索过于丑陋，有一种简单的插件：tree，这是他的效果：
@@ -358,6 +693,50 @@ tulei@tulei:~$ tree
     └── example_1.sh
 
 1 directory, 3 files
+```
+
+tree -p : 输出更详细的内容：
+```bash
+tulei@tulei:~$ tree
+.
+├── snap
+│   └── tldr
+│       ├── 728
+│       ├── common
+│       └── current -> 728
+├── test1
+├── test2
+├── test3
+└── test_0
+    ├── TEST
+    ├── aaa
+    ├── fdbug.sh
+    ├── marco_polo_pidwait.sh
+    ├── sigint.py
+    ├── test.sh
+    └── wher
+
+9 directories, 7 files
+tulei@tulei:~$ tree -p
+[drwxr-x---]  .
+├── [drwx------]  snap
+│   └── [drwxr-xr-x]  tldr
+│       ├── [drwxr-xr-x]  728
+│       ├── [drwxr-xr-x]  common
+│       └── [lrwxrwxrwx]  current -> 728
+├── [drwxr-xr-x]  test1
+├── [drwx------]  test2
+├── [drwxr-xr-x]  test3
+└── [drwxr-xr-x]  test_0
+    ├── [-rw-r--r--]  TEST
+    ├── [-rw-r--r--]  aaa
+    ├── [-rwxr-xr-x]  fdbug.sh
+    ├── [-rwxr-xr-x]  marco_polo_pidwait.sh
+    ├── [-rw-r--r--]  sigint.py
+    ├── [-rwxr-xr-x]  test.sh
+    └── [-rw-r--r--]  wher
+
+9 directories, 7 files
 ```
 
 #### cd
@@ -425,7 +804,22 @@ tulei@tulei:~$ find . -name hello_1.txt
 
 可以结合通配符 `-path '**/test/*.py'`来进行路径查找（这里的`**`代表可能是多层目录，我们只知道最后边是什么样，前边已经忘完了也可以找到）
 
+可以使用 -o 来表示 or:
+```bash
+tulei@tulei:~$ find . -type f -name "TEST" -o -type d -name "test*"
+./test_0
+./test_0/TEST
+./test3
+./test2
+./test1
+```
+
+- `-size +1M` specifies that we want files larger than 1 megabyte
+- `-size -1M` specifies that we want files less than 1 megabyte
+
+
 可以结合修改时间来查找：`-mtime -1`表示在最近一天之内修改过的东西
++1 表示一天以上
 
 ```bash
 # Find all directories named src
@@ -439,6 +833,10 @@ find . -size +500k -size -10M -name '*.tar.gz'
 ```
 
 在找到之后，可以结合 `-exec rm {} \;`来删除所有你找到的文件
+
+-exec : 表示执行后边的动作
+{}：是占位符
+\; 表示 -exec 的动作结束
 
 ```bash
 # Delete all files with .tmp extension
@@ -516,11 +914,122 @@ rg --stats PATTERN
 
 ### 对文件的操作：
 
-#### mkdir & mv
+#### mkdir 
 
 mkdir：创建新的子目录
 
-mv：重命名，或移动文件/文件夹
+mkdir -p :可以在需要的时候为其添加父目录。
+(如果不加-p 那么当父目录不存在时，你的子目录也不会被创建)
+可以在你是bashrc中添加这条命令，自动将mkdir 设置为 mkdir -p 
+
+```
+alias mkdir="mkdir -p"     # -p make parent dirs as needed
+```
+
+mkdir -m :在创建时为文件夹设置权限
+
+```bash
+tulei@tulei:~$ ls -l
+total 8.0K
+drwx------ 3 tulei tulei 4.0K Nov 11 17:44 snap
+drwxr-xr-x 2 tulei tulei 4.0K Nov 16 14:34 test_0
+tulei@tulei:~$ mkdir test1
+tulei@tulei:~$ mkdir -m 700 test2
+tulei@tulei:~$ ls -l
+total 16K
+drwx------ 3 tulei tulei 4.0K Nov 11 17:44 snap
+drwxr-xr-x 2 tulei tulei 4.0K Nov 16 21:54 test1
+drwx------ 2 tulei tulei 4.0K Nov 16 21:55 test2
+drwxr-xr-x 2 tulei tulei 4.0K Nov 16 14:34 test_0
+```
+
+mkdir -v ; 会输出他做了什么
+```bash
+tulei@tulei:~$ mkdir -v test3
+mkdir: created directory 'test3'
+```
+
+#### touch: 
+
+The `touch` command is used to create an empty file. If the file already exists, it updates the file's timestamp without changing its content.
+
+```bash
+tulei@tulei:~$ mkdir test_1
+tulei@tulei:~$ ls
+snap  test_0  test_1
+tulei@tulei:~$ cd test_1
+tulei@tulei:~/test_1$ ls
+tulei@tulei:~/test_1$ touch hello
+tulei@tulei:~/test_1$ ls
+hello
+tulei@tulei:~/test_1$ 
+```
+
+touch 可以一次性创建多个文件：
+
+**并且可以和 通配符一起用**
+
+```bash
+tulei@tulei:~/test_1$ touch a.txt b.txt aab.txt
+tulei@tulei:~/test_1$ ls
+a.txt  aab.txt  b.txt
+tulei@tulei:~/test_1$ ls *.txt
+a.txt  aab.txt  b.txt
+tulei@tulei:~/test_1$ ls a*.txt
+a.txt  aab.txt
+```
+
+```bash
+tulei@tulei:~/test_1$ touch note_{1..5}.txt
+tulei@tulei:~/test_1$ ls
+note_1.txt  note_2.txt  note_3.txt  note_4.txt  note_5.txt
+```
+
+touch 修改时间：
+
+```bash
+tulei@tulei:~/test_1$ ls
+tulei@tulei:~/test_1$ touch exampel_1
+tulei@tulei:~/test_1$ touch exampel_2
+tulei@tulei:~/test_1$ ls -l
+total 0
+-rw-r--r-- 1 tulei tulei 0 Nov 16 20:56 exampel_1
+-rw-r--r-- 1 tulei tulei 0 Nov 16 20:56 exampel_2
+
+# 更新时间
+tulei@tulei:~/test_1$ touch exampel_1
+tulei@tulei:~/test_1$ ls -l
+total 0
+-rw-r--r-- 1 tulei tulei 0 Nov 16 20:57 exampel_1
+-rw-r--r-- 1 tulei tulei 0 Nov 16 20:56 exampel_2
+
+# 修改时间
+tulei@tulei:~/test_1$ touch -d "2004-01-01 12:00:00" exampel_1
+tulei@tulei:~/test_1$ ls -l
+total 0
+-rw-r--r-- 1 tulei tulei 0 Jan  1  2004 exampel_1
+-rw-r--r-- 1 tulei tulei 0 Nov 16 20:56 exampel_2
+
+# 将后一个文件的时间修改为 第一个文件的时间
+tulei@tulei:~/test_1$ touch -r exampel_2 exampel_1
+tulei@tulei:~/test_1$ ls -l
+total 0
+-rw-r--r-- 1 tulei tulei 0 Nov 16 20:56 exampel_1
+-rw-r--r-- 1 tulei tulei 0 Nov 16 20:56 exampel_2
+tulei@tulei:~/test_1$ touch -d "2004-01-01 12:00:00" exampel_1
+tulei@tulei:~/test_1$ touch -r exampel_1 exampel_2
+tulei@tulei:~/test_1$ ls -l
+total 0
+-rw-r--r-- 1 tulei tulei 0 Jan  1  2004 exampel_1
+-rw-r--r-- 1 tulei tulei 0 Jan  1  2004 exampel_2
+```
+
+#### file 查看文件类型
+
+在Linux中 你可以创建一个文件 为他命名为 xxx.txt 但实际上他可以不是txt 文件，你要是想直到他真正的类型，可以使用 file filename 来查看。
+
+
+#### mv：重命名，或移动文件/文件夹
 
 ```shell
 #重命名文件
@@ -544,6 +1053,26 @@ hello.txt
 tulei@tulei:~$
 ```
 
+mv -i : 安全的移动文件，当目的地已经存在已有文件时，提醒你
+
+mv -f : 强制移动文件，如果目的地有文件，就覆盖他而不提示
+
+mv -v : 可以输出他具体做了什么
+
+mv -b : 在移动文件时会备份，但重命名文件夹时不会
+
+当最后一个参数是 `文件夹名` 时，可以接收前边有多个参数，意味着一次移动多个文件，可以使用通配符。
+
+移动文件夹时，不需要像cp 一样使用 -r :
+
+```bash
+tulei@tulei:~$ ls
+snap  test_0  test_1
+tulei@tulei:~$ mv test_1 test2
+tulei@tulei:~$ ls
+snap  test2  test_0
+```
+
 #### cp
 
 复制到目标位置：
@@ -558,6 +1087,43 @@ tulei@tulei:~$ ls test
 hello.txt
 tulei@tulei:~$
 ```
+
+复制到另一个文件：
+```bash
+tulei@tulei:~/test_1$ cat hello
+tulei@tulei:~/test_1$ echo "hello" > hello
+tulei@tulei:~/test_1$ ls
+hello
+tulei@tulei:~/test_1$ cat hello
+hello
+tulei@tulei:~/test_1$ cp hello hello_copy
+tulei@tulei:~/test_1$ ls
+hello  hello_copy
+tulei@tulei:~/test_1$ cat hello_copy 
+hello
+tulei@tulei:~/test_1$ 
+```
+
+cp -r 递归复制文件夹：
+```bash
+tulei@tulei:~/test_1$ cd ..
+tulei@tulei:~$ ls
+snap  test_0  test_1
+tulei@tulei:~$ cp -r test_1 test_1_copy
+tulei@tulei:~$ ls
+snap  test_0  test_1  test_1_copy
+tulei@tulei:~$ ls test_1_copy
+hello  hello_copy
+tulei@tulei:~$ cat test_1_copy/hello_copy 
+hello
+tulei@tulei:~$ 
+```
+
+cp -i : 安全的复制文件，当目的地已经存在已有文件时，提醒你
+
+cp -f : 强制复制文件，如果目的地有文件，就覆盖他而不提示
+
+cp -p : 不只复制文件内容，还一并复制其更新时间，所有权等信息。
 
 #### rm
 
@@ -586,7 +1152,145 @@ rmdir: failed to remove 'test': Directory not empty
 tulei@tulei:~$ rm -r test
 tulei@tulei:~$ ls
 tulei@tulei:~$
+
+# 可以使用 -i 来安全删除，在删除前会让你看看你删掉了什么
+tulei@tulei:~$ rm -ri test_1_copy/
+rm: descend into directory 'test_1_copy/'? y
+rm: remove regular file 'test_1_copy/hello'? y
+rm: remove regular file 'test_1_copy/hello_copy'? y
+rm: remove directory 'test_1_copy/'? y
+tulei@tulei:~$ 
+
+# -f 是强制删除，-rf 会递归删除所有，但不推荐如此做
 ```
+
+rm -v : 执行结束后告诉我你做了什么
+
+####  chown & chmod
+
+可以利用 chown 来改变文件的归属
+```bash
+tulei@tulei:~/test_2$ ls
+tulei@tulei:~/test_2$ touch test.txt
+tulei@tulei:~/test_2$ touch example
+tulei@tulei:~/test_2$ ls -l
+total 0
+-rw-r--r-- 1 tulei tulei 0 Nov 16 15:45 example
+-rw-r--r-- 1 tulei tulei 0 Nov 16 15:44 test.txt
+tulei@tulei:~/test_2$ sudo chown root:root example 
+[sudo] password for tulei: 
+tulei@tulei:~/test_2$ ls -l
+total 0
+-rw-r--r-- 1 root  root  0 Nov 16 15:45 example
+-rw-r--r-- 1 tulei tulei 0 Nov 16 15:44 test.txt
+```
+
+文件归属改变后，文件对自己就变得不可写了。
+
+```bash
+tulei@tulei:~/test_2$ ls -l
+total 0
+-rw-r--r-- 1 root  root  0 Nov 16 15:45 example
+-rw-r--r-- 1 tulei tulei 0 Nov 16 15:44 test.txt
+tulei@tulei:~/test_2$ echo "hello" > example 
+bash: example: Permission denied
+tulei@tulei:~/test_2$ echo "hello" > test.txt 
+tulei@tulei:~/test_2$ cat example 
+tulei@tulei:~/test_2$ cat test.txt 
+hello
+```
+
+可以使用 chmod 来为自己增加写入权限，使得文件可写。
+
+chmod 可以利用二进制数来表示权限
+0：没用权限
+1：可执行
+2：可写
+4：可读
+连续的三个数分别代表：所有者权限，所属组别的权限，其他人的权限
+
+```bash
+tulei@tulei:~/test_2$ ls -l
+total 4
+-rw-r--r-- 1 root  root  0 Nov 16 15:45 example
+-rw-r--r-- 1 tulei tulei 6 Nov 16 16:30 test.txt
+tulei@tulei:~/test_2$ chmod 602 example 
+chmod: changing permissions of 'example': Operation not permitted
+tulei@tulei:~/test_2$ sudo chmod 602 example 
+tulei@tulei:~/test_2$ sudo chmod 602 test.txt 
+tulei@tulei:~/test_2$ ls -l
+total 4
+-rw-----w- 1 root  root  0 Nov 16 15:45 example
+-rw-----w- 1 tulei tulei 6 Nov 16 16:30 test.txt
+tulei@tulei:~/test_2$ echo "hello" >> example 
+tulei@tulei:~/test_2$ echo "hello" >> test.txt 
+```
+
+chmod 也可以使用 + - 来增加减少权限
+
+u：文件所有者
+g：组织
+o：其他人
+a：all
+
+```bash
+tulei@tulei:~/test_2$ ls -l
+total 8
+---------- 1 root  root   6 Nov 16 16:52 example
+---------- 1 tulei tulei 12 Nov 16 16:52 test.txt
+tulei@tulei:~/test_2$ chmod u+x test.txt 
+tulei@tulei:~/test_2$ ls -l
+total 8
+---------- 1 root  root   6 Nov 16 16:52 example
+---x------ 1 tulei tulei 12 Nov 16 16:52 test.txt
+tulei@tulei:~/test_2$ chmod g+w test.txt 
+tulei@tulei:~/test_2$ ls -l
+total 8
+---------- 1 root  root   6 Nov 16 16:52 example
+---x-w---- 1 tulei tulei 12 Nov 16 16:52 test.txt
+tulei@tulei:~/test_2$ chmod o+w test.txt 
+tulei@tulei:~/test_2$ ls -l
+total 8
+---------- 1 root  root   6 Nov 16 16:52 example
+---x-w--w- 1 tulei tulei 12 Nov 16 16:52 test.txt
+tulei@tulei:~/test_2$ chmod a+r test.txt 
+tulei@tulei:~/test_2$ ls -l
+total 8
+---------- 1 root  root   6 Nov 16 16:52 example
+-r-xrw-rw- 1 tulei tulei 12 Nov 16 16:52 test.txt
+```
+
+chown 也可以用来改变文件夹的归属。
+
+```bash
+tulei@tulei:~$ ls
+snap  test_0  test_2
+tulei@tulei:~$ mkdir test_1/example
+tulei@tulei:~$ echo "hello" > test_1/helloworld
+tulei@tulei:~$ echo "hello" > test_1/example/hello1
+tulei@tulei:~$ ls -lR test_1
+test_1:
+total 8
+drwxr-xr-x 2 tulei tulei 4096 Nov 16 16:43 example
+-rw-r--r-- 1 tulei tulei    6 Nov 16 16:43 helloworld
+
+test_1/example:
+total 4
+-rw-r--r-- 1 tulei tulei 6 Nov 16 16:43 hello1
+tulei@tulei:~$ sudo chown -R root:root test_1
+[sudo] password for tulei: 
+tulei@tulei:~$ ls -lR test_1
+test_1:
+total 8
+drwxr-xr-x 2 root root 4096 Nov 16 16:43 example
+-rw-r--r-- 1 root root    6 Nov 16 16:43 helloworld
+
+test_1/example:
+total 4
+-rw-r--r-- 1 root root 6 Nov 16 16:43 hello1
+```
+
+
 
 ---
 
@@ -747,7 +1451,7 @@ tulei@tulei:/sys/class/backlight$ sudo su
 root@tulei:/sys/class/backlight#
 ```
 
-可以看到，现在我以 root 身份登录了终端，并且由原来的 $ 变成了 #，表明我可以使用管理员权限来进行操作
+可以看到，现在我以 root 身份登录了终端，并且由原来的 $ 变成了` #`，表明我可以使用管理员权限来进行操作
 
 退出 root 身份：
 
@@ -767,6 +1471,179 @@ echo 500 | sudo tee brightness
 为什么他能成功？
 
 因为在打开 brightness 时，使用了 root 权限（之前不行是因为你依旧是在使用用户权限去打开文件）
+
+---
+### 用户管理
+
+#### useradd
+
+```bash
+tulei@tulei:~$ sudo useradd joker
+tulei@tulei:~$ sudo grep -w 'joker' /etc/passwd
+joker:x:1001:1001::/home/joker:/bin/sh
+```
+
+新用户的信息会在 /etc/passwd 中找到：
+
+This line shows:
+
+- Username: joker
+- Password: x (the actual password is stored securely elsewhere)
+- User ID: 1001
+- Group ID: 1001
+- Home Directory: `/home/joker`, but it hasn't been created yet
+- Default Shell: `/bin/sh`
+
+可以看到，home 目录下依旧只有自己，这是因为，我们并没有为其创建目录（可以使用 sudo useradd -m joker 来在新用户创建时就为其创建目录）
+
+```bash
+tulei@tulei:~$ cd ..
+tulei@tulei:/home$ ls -l
+total 4
+drwxr-x--- 14 tulei tulei 4096 Nov 16 17:14 tulei
+```
+
+这里我删掉了之前的用户，重新创建了joker 用户：
+(可以看到，新用户的群组和他的用户名实际上是相同的)
+可以在 ect/group 里看到
+
+```bash
+tulei@tulei:/home$ ls -l
+total 8
+drwxr-x---  2 joker joker 4096 Nov 16 19:51 joker
+drwxr-x--- 15 tulei tulei 4096 Nov 16 19:26 tulei
+tulei@tulei:/home$ id joker
+uid=1001(joker) gid=1001(joker) groups=1001(joker)
+tulei@tulei:~$ cat /etc/group | grep -E "joker"
+joker:x:1001:
+```
+
+
+可以使用 sudo passwd 来为新用户设置密码：
+
+```bash
+tulei@tulei:~$ sudo passwd joker 
+New password: 
+Retype new password: 
+passwd: password updated successfully
+```
+
+密码实际上存储在 shadow 中，他和passwd 权限的区别在于：
+
+```bash
+tulei@tulei:~$ ls -l /etc/passwd
+-rw-r--r-- 1 root root 1515 Nov 16 17:15 /etc/passwd
+tulei@tulei:~$ ls -l /etc/shadow
+-rw-r----- 1 root shadow 958 Nov 16 17:27 /etc/shadow
+```
+
+#### usermod
+
+实际上可以通过 usermod 来修改用户的 目录：
+
+```bash
+tulei@tulei:/home$ sudo grep -w 'joker' /etc/passwd
+joker:x:1001:1001::/home/joker:/bin/sh
+tulei@tulei:/home$ sudo usermod -d /home/joker/test joker
+tulei@tulei:/home$ sudo grep -w 'joker' /etc/passwd
+joker:x:1001:1001::/home/joker/test:/bin/sh
+```
+
+也可以修改用户的默认 shell
+
+```bash
+tulei@tulei:/home$ sudo usermod -s /bin/bash joker
+tulei@tulei:/home$ sudo grep -w 'joker' /etc/passwd
+joker:x:1001:1001::/home/joker:/bin/bash
+```
+
+可以更该 用户的 groups:
+```bash
+tulei@tulei:/home$ sudo usermod -aG sudo joker
+tulei@tulei:/home$ groups joker
+joker : joker sudo
+```
+
+也可以创建一个 group 然后把用户加进去：
+
+```bash
+tulei@tulei:~$ sudo groupadd developers
+tulei@tulei:~$ sudo usermod -aG developers joker
+tulei@tulei:~$ id joker 
+uid=1001(joker) gid=1001(joker) groups=1001(joker),1002(developers)
+```
+
+
+
+#### su 
+
+更换用户：
+
+```bash
+tulei@tulei:/home$ su - joker
+Password: 
+To run a command as administrator (user "root"), use "sudo <command>".
+See "man sudo_root" for details.
+
+Welcome to Ubuntu 22.04.5 LTS (GNU/Linux 6.6.87.2-microsoft-standard-WSL2 x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Sun Nov 16 17:52:12 CST 2025
+
+  System load:  0.19                Processes:             62
+  Usage of /:   0.5% of 1006.85GB   Users logged in:       1
+  Memory usage: 18%                 IPv4 address for eth0: 172.20.156.97
+  Swap usage:   0%
+
+ * Strictly confined Kubernetes makes edge and IoT secure. Learn how MicroK8s
+   just raised the bar for easy, resilient and secure K8s cluster deployment.
+
+   https://ubuntu.com/engage/secure-kubernetes-at-the-edge
+
+This message is shown once a day. To disable it please create the
+/home/joker/.hushlogin file.
+joker@tulei:~$ 
+```
+
+#### passwd -l -u
+
+如果你不想该账号被登录，可以使用sudo passwd -l
+
+```bash
+tulei@tulei:~$ sudo passwd -l joker
+passwd: password expiry information changed.
+tulei@tulei:~$ su - joker
+Password: 
+su: Authentication failure
+tulei@tulei:~$ sudo passwd -u joker
+passwd: password expiry information changed.
+tulei@tulei:~$ su - joker
+Password: 
+To run a command as administrator (user "root"), use "sudo <command>".
+See "man sudo_root" for details.
+
+joker@tulei:~$ 
+```
+
+-l 意味着这个密码被锁了，用了也没用
+-u 指 unlock
+
+#### userdel
+
+可以使用userdel 来删除用户， -r 表示删除用户目录和邮箱等
+
+```bash
+tulei@tulei:/home$ sudo userdel -r joker
+userdel: joker mail spool (/var/mail/joker) not found
+tulei@tulei:/home$ ls
+tulei
+tulei@tulei:/home$ sudo grep -w 'joker' /etc/passwd
+tulei@tulei:/home$ 
+```
+
 
 ---
 

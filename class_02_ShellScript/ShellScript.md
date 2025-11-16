@@ -14,13 +14,6 @@ tags:
 2. bash（Bourne-Again SHell）是shell的一种，是许多Linux发行版和macOS（在较新版本中已改为zsh，但bash仍常见）默认的shell。
 3. shell script（shell脚本）是一种为shell编写的脚本程序，它可以用各种shell的解释器来执行，包括bash、sh、zsh等。
 
-区别：
-
-- bash是一个具体的shell程序，而shell script是一种脚本语言，它可以用bash来执行，也可以用其他shell（如sh、csh、ksh等）来执行。
-- 换句话说，bash是shell的一种实现，而shell script是使用shell语法编写的脚本。
-
-  
-
 脚本的第一行通常会是 `#!/bin/bash`（称为 Shebang），这指明了这个脚本必须用Bash来解释执行。如果写的是 `#!/bin/sh`，则可能被链接到更精简的Shell（如`dash`）来执行。
 
 ---
