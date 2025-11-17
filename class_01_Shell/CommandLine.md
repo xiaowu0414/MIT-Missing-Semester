@@ -435,6 +435,12 @@ tulei@tulei:~$ which echo
 /usr/bin/echo
 ```
 
+which 只能输出 $PATH 中的命令，如果你的命令不在系统路径中，可以使用如下命令将其加入系统路径，推荐将其写在 bashrc 中：
+
+```bash
+export PATH=~/.local/bin:$PATH
+```
+
 #### echo & cat：
 
 echo 可以直接将文字写入文档
@@ -1294,7 +1300,7 @@ total 4
 
 ---
 
-### Stream
+### I/O Stream
 
 程序与外界交互实际上依赖于 stream
 
@@ -1362,6 +1368,57 @@ hello again
 tulei@tulei:~$
 ```
 
+#### stderr
+
+当你报错的时候，他并不是 stdin 或者 stdout ，而是另一条输出路线 stderr
+
+所以他并不会直接被 `>` 重定向到其他文件
+
+不过可以通过一些其他设定来达到你想要的效果
+
+- `0`: stdin (standard input)
+- `1`: stdout (standard output)
+- `2`: stderr (standard error)
+
+直接用重定向不了：
+
+```bash
+tulei@tulei:~$ ls
+snap  test_0
+tulei@tulei:~$ ls /fake/directory > peanuts.txt
+ls: cannot access '/fake/directory': No such file or directory
+tulei@tulei:~$ ls
+peanuts.txt  snap  test_0
+tulei@tulei:~$ cat peanuts.txt 
+```
+
+但可以使用 2 来指定 stderr 的输出
+
+```
+tulei@tulei:~$ ls /fake/directory 2> peanuts.txt
+tulei@tulei:~$ cat peanuts.txt 
+ls: cannot access '/fake/directory': No such file or directory
+```
+
+`2>&1` 可以直接合并 stdout 和 stderr ，并将其重定向
+对这个用法，有一种更现代的方法 `&>`
+
+```bash
+tulei@tulei:~$ rm peanuts.txt 
+tulei@tulei:~$ ls /fake/directory /etc/passwd &> peanuts.txt
+tulei@tulei:~$ ls
+peanuts.txt  snap  test_0
+tulei@tulei:~$ cat peanuts.txt 
+ls: cannot access '/fake/directory': No such file or directory
+/etc/passwd
+```
+
+`/dev/null` 可以扔掉任何你不想要的 stdout 或者 stderr
+
+```bash
+ls /fake/directory 2> /dev/null
+```
+
 #### |
 
 Pipe(|):他可以将左边程序的输入变成右边程序的输出
@@ -1383,6 +1440,23 @@ tulei@tulei:~$
 实际上你可以意识到,shell 通过对 stream 的操作,可以实现不同程序之间的交互
 
 pipe 不只可以用来处理文本,他也可以被用来处理二进制图片,甚至视频
+
+#### tee
+
+同时将 | 接收到的信息 作为 stdout 打印 ，并 作为后续操作的 stdin 
+
+```bash
+tulei@tulei:~$ ls
+snap  test_0
+tulei@tulei:~$ ls | tee peanuts.txt
+snap
+test_0
+tulei@tulei:~$ ls
+peanuts.txt  snap  test_0
+tulei@tulei:~$ cat peanuts.txt 
+snap
+test_0
+```
 
 ---
 ### 找到之前运行过的命令：
