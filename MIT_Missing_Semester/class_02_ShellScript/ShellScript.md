@@ -391,7 +391,7 @@ A sample output would look like this
  drwx------+ 47 user group 1.5K Jan 12 18:08 ..
 ```
 
-![](attachments/Pasted%20image%2020251111222235.png)
+![](attachments/Pasted image 20251111222235.png)
 
 ### Exercise 2
 
@@ -401,11 +401,11 @@ Write bash functions `marco` and `polo` that do the following. Whenever you 
 
 我写了以下 .sh 脚本，尽管分条在命令行中执行每一条命令可以达到移动位置的效果，但直接运行脚本并不能完成转换：
 
-![](attachments/Pasted%20image%2020251111230717.png)
+![](attachments/Pasted image 20251111230717.png)
 
 分别执行：
 
-![](attachments/Pasted%20image%2020251111230815.png)
+![](attachments/Pasted image 20251111230815.png)
 
 这里错误是因为：  ==当你在命令行中逐行执行时，cd命令会改变当前shell的目录。但是，当你运行脚本时，脚本是在一个子shell中执行的，cd命令只会改变子shell的当前目录，而不会影响父shell（即你当前的终端）。因此，脚本执行完毕后，子shell结束，你回到父shell，目录自然没有改变。==
 
@@ -413,11 +413,11 @@ Write bash functions `marco` and `polo` that do the following. Whenever you 
 
 正解：
 
-![](attachments/Pasted%20image%2020251111231905.png)
+![](attachments/Pasted image 20251111231905.png)
 
 函数运行演示：
 
-![](attachments/Pasted%20image%2020251111232112.png)
+![](attachments/Pasted image 20251111232112.png)
 
 ### Exercise 3
 
@@ -470,7 +470,7 @@ echo "Total runs: ${#arr[@]}"
 ```
 
 运行效果：
-![](attachments/Pasted%20image%2020251112151828.png)
+![](attachments/Pasted image 20251112151828.png)
 
 ### Exercise 4
 
@@ -480,12 +480,12 @@ Your task is to write a command that recursively finds all HTML files in the fol
 
 If you’re on macOS, note that the default BSD `find` is different from the one included in [GNU coreutils](https://en.wikipedia.org/wiki/List_of_GNU_Core_Utilities_commands). You can use `-print0` on `find` and the `-0` flag on `xargs`. As a macOS user, you should be aware that command-line utilities shipped with macOS may differ from the GNU counterparts; you can install the GNU versions if you like by [using brew](https://formulae.brew.sh/formula/coreutils).
 
-![](attachments/Pasted%20image%2020251112155606.png)
+![](attachments/Pasted image 20251112155606.png)
 
 在通道 | 前的 ```-print0``` 表示：将找到的所有路径，以null作为分隔，然后输出
 在通道 | 后的 ```-0``` 表示：以null作为分隔，将输入划分后给后边的脚本
 
-![](attachments/Pasted%20image%2020251112155811.png)
+![](attachments/Pasted image 20251112155811.png)
 
 第一个报错：
 - 这是因为 `find`命令使用了 `-print0`，它会用空字符（NUL）分隔找到的文件名，但是 `xargs`默认使用空白字符（空格、换行等）作为分隔符。所以当文件名中包含空格时，就会出错。
@@ -497,7 +497,7 @@ If you’re on macOS, note that the default BSD `find` is different from the o
 为什么要使用空字符（NUL）分隔，而不用默认的分隔呢？
 - 默认分隔无法识别文件名中的空格，如下图中的 “aaa  a.html”
 
-![](attachments/Pasted%20image%2020251112160540.png)
+![](attachments/Pasted image 20251112160540.png)
 
 ### Exercise 5
 
@@ -513,4 +513,4 @@ find . -type f -exec ls -lth {} + | head -10
 ```+```：表示占位符中有很多内容，需要一次性扔给 ls 执行
 ```head -10```：列出前10个
 
-![](attachments/Pasted%20image%2020251112161946.png)
+![](attachments/Pasted image 20251112161946.png)

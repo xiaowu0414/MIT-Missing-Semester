@@ -389,7 +389,7 @@ hostname: you must be root to change the host name
 ```
 
 #### htop:
-![](attachments/Pasted%20image%2020251116141041.png)
+![](attachments/Pasted image 20251116141041.png)
 htop shows:
 
 - Top: CPU and memory usage, as well as how long your computer has been running (uptime).

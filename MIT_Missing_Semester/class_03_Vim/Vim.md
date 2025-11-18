@@ -7,7 +7,7 @@ tags:
 
 Vim 是基于 model 的编辑器，他有以下几种模式，使用 esc 即可返回 normal. 
 
-![](attachments/Pasted%20image%2020251112163738.png)
+![](attachments/Pasted image 20251112163738.png)
 
 因为我们需要经常返回Normal模式，而```esc``` 键又举例手指太远，所以推荐使用imap将esc映射为键盘上比较方便的按键，具体教程如下：[alternative mapping](https://vim.fandom.com/wiki/Avoid_the_escape_key#Mappings)
 
