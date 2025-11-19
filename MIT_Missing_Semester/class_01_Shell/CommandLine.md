@@ -398,6 +398,17 @@ htop shows:
 
 记得按 q 退出
 
+#### du
+
+- `du -sh` - displays disk usage (the flag `s` is for summarized form).  
+    `du -sh` - 显示磁盘使用情况（标志 `s` 表示摘要表单）。
+- `du -sh *` - displays the disk usage for every folder or file in that location.  
+    `du -sh *` - 显示该位置每个文件夹或文件的磁盘使用情况。
+- Another option is to do `du -s * | sort -n` which will sort the results based on the size from smallest to largest.  
+    另一种选择是使用 `du -s * | 排序 -n`，它会根据大小从小到大排序结果。
+- arrow up or arrow down, brings up the last commands. Space bar to go to next page.  
+    向上箭头或向下箭头，会弹出最后的指令。空格键可以跳到下一页。
+
 ---
 
 ### 文件查看与分割
@@ -1132,6 +1143,9 @@ grep "a\{2,\}" file   # 匹配 2个或更多 a
 grep -E "a|b" file     # 匹配 a 或 b 
 grep -E "a{2,}" file   # 匹配 2个或更多 a
 ```
+
+- `-B 2` shows 2 lines Before the match
+- `-A 2` shows 2 lines After the match
 
 #### ==rg==
 

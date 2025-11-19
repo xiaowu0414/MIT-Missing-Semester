@@ -3,6 +3,8 @@ date: 2025-11-11
 tags:
   - Vim
 ---
+Vim的快捷键： https://devhints.io/vim
+
 ## Vim 基本操作介绍：
 
 Vim 是基于 model 的编辑器，他有以下几种模式，使用 esc 即可返回 normal. 
