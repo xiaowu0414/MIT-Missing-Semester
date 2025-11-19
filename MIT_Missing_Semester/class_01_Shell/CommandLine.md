@@ -400,7 +400,7 @@ htop shows:
 
 ---
 
-### Echo
+### 文件查看与分割
 
 #### echo：
 
@@ -442,7 +442,7 @@ which 只能输出 $PATH 中的命令，如果你的命令不在系统路径中�
 export PATH=~/.local/bin:$PATH
 ```
 
-#### echo & cat & cut：
+#### echo & cat：
 
 echo 可以直接将文字写入文档
 
@@ -478,13 +478,22 @@ world$
 
 cat 还可以为文档内容加上行号，在下文中有介绍
 
-cut 可以查看指定的第几个字符
-
-cut -c 按字符分隔
-
-
-
 #### head & tail
+
+head 可以同时查看多个文件
+
+```bash
+tulei@tulei:~$ head -n 3 sample.txt  sample_cp.txt 
+==> sample.txt <==
+sample2.txt
+The
+quick
+
+==> sample_cp.txt <==
+sample2.txt
+The
+quick
+```
 
 使用head 和tail 可以查看指定的行的内容
 
@@ -535,6 +544,209 @@ hetulei@tulei:~/test_2$ head -c 10 hello
 hello
 helltulei@tulei:~/test_2$ 
 ```
+
+使用 tail -f 可以实现实时更新的效果
+
+```
+tail -f /var/log/syslog
+```
+
+#### cut
+
+cut 可以按特定字符分隔文件，之后输出分割后的对应文件
+
+```bash
+tulei@tulei:~$ cat sample.txt 
+ID,Name,Age,Email
+1,John Doe,25,john.doe@email.com
+2,Jane Smith,35,jane.smith@email.com
+3,Lily Chen,30,lily.chen@email.com
+4,Andy Brown,22,andy.brown@email.com
+tulei@tulei:~$ cut -d ',' -f 2 ./sample.txt 
+Name
+John Doe
+Jane Smith
+Lily Chen
+Andy Brown
+```
+
+利用 tail 可以从对应行开始输出，这里是从第二行开始（也就是去掉第一行）
+
+```bash
+tulei@tulei:~$ cut -d ',' -f 2 ./sample.txt | tail -n +2
+John Doe
+Jane Smith
+Lily Chen
+Andy Brown
+```
+
+输出多个分隔后的文件
+
+```bash
+tulei@tulei:~$ cat ./sample.txt 
+ID,Name,Age,Email
+1,John Doe,25,john.doe@email.com
+2,Jane Smith,35,jane.smith@email.com
+3,Lily Chen,30,lily.chen@email.com
+4,Andy Brown,22,andy.brown@email.com
+
+# 利用 ， 分隔
+tulei@tulei:~$ cut -d ',' -f 2,4 ./sample.txt | tail -n +2
+John Doe,john.doe@email.com
+Jane Smith,jane.smith@email.com
+Lily Chen,lily.chen@email.com
+Andy Brown,andy.brown@email.com
+
+# 利用 - 连续
+tulei@tulei:~$ cut -d ',' -f 1-2,4 ./sample.txt | tail -n +2
+1,John Doe,john.doe@email.com
+2,Jane Smith,jane.smith@email.com
+3,Lily Chen,lily.chen@email.com
+4,Andy Brown,andy.brown@email.com
+```
+
+cut -c 按字符分隔
+
+有时并没用特定的分隔符，就可以利用字节来分隔
+
+```bash
+tulei@tulei:~$ cat sample.txt 
+ID,Name,Age,Email
+1,John Doe,25,john.doe@email.com
+2,Jane Smith,35,jane.smith@email.com
+3,Lily Chen,30,lily.chen@email.com
+4,Andy Brown,22,andy.brown@email.com
+tulei@tulei:~$ cut -c 5 ./sample.txt 
+a
+h
+n
+l
+d
+```
+
+```bash
+tulei@tulei:~$ cat sample.txt 
+ISBN     Title          Quantity
+1234567890The Great Adv      100
+2345678901Mystery in th       75
+3456789012Cooking Basi       50
+4567890123Science Exp        125
+tulei@tulei:~$ cut -c 11-25 ./sample.txt 
+itle          Q
+The Great Adv  
+Mystery in th  
+Cooking Basi   
+Science Exp    
+```
+
+#### paste
+
+paste 和 cat 相似，但他不是链接文件，而是将文件中不同行合并为1行。
+
+```bash
+tulei@tulei:~$ cat sample.txt 
+sample2.txt
+The
+quick
+brown
+fox
+
+# 按行合并 
+tulei@tulei:~$ paste -s sample.txt 
+sample2.txt     The     quick   brown   fox
+
+# 合并时删掉空格
+tulei@tulei:~$ paste -d '' -s sample.txt 
+sample2.txtThequickbrownfox
+```
+
+#### join & split
+
+join 
+
+依据第一列的编号，合并表格
+
+```bash
+tulei@tulei:~$ cat sample.txt 
+1001 John Engineering
+1002 Sarah Marketing
+1003 Mike Sales
+1004 Emily HR
+1005 David Finance
+tulei@tulei:~$ cat date.txt 
+1001 75000
+1002 65000
+1003 70000
+1004 60000
+1005 80000
+tulei@tulei:~$ join sample.txt date.txt 
+1001 John Engineering 75000
+1002 Sarah Marketing 65000
+1003 Mike Sales 70000
+1004 Emily HR 60000
+1005 David Finance 80000
+```
+
+也可以专门指定合并的列(第一个文件的第一列，第一个文件的第三列，第二个文件的第二列，第一个文件的)
+
+```bash
+tulei@tulei:~$ join -o 1.2,1.3,2.2,1.1 sample.txt date.txt
+John Engineering 75000 1001
+Sarah Marketing 65000 1002
+Mike Sales 70000 1003
+Emily HR 60000 1004
+David Finance 80000 1005
+```
+
+要是存在部分元素在另一个文件中并不存在，可以使用 -a 来指定完整展开的文件
+
+```bash
+tulei@tulei:~$ cat sample.txt 
+1001 John Engineering
+1002 Sarah Marketing
+1003 Mike Sales
+1004 Emily HR
+1005 David Finance
+1006 TEST
+tulei@tulei:~$ join sample.txt date.txt 
+1001 John Engineering 75000
+1002 Sarah Marketing 65000
+1003 Mike Sales 70000
+1004 Emily HR 60000
+1005 David Finance 80000
+tulei@tulei:~$ join -a 1 sample.txt date.txt 
+1001 John Engineering 75000
+1002 Sarah Marketing 65000
+1003 Mike Sales 70000
+1004 Emily HR 60000
+1005 David Finance 80000
+1006 TEST
+```
+
+也可以不用第一个字段来匹配，
+join -1 3 -2 1 
+用第一个文件的 第三个字段 与第二个文件的 第一个字段 来匹配
+
+```bash
+tulei@tulei:~$ cat example.txt 
+Engineering ENG
+Marketing MKT
+Sales SLS
+HR HRS
+Finance FIN
+IT ITS
+tulei@tulei:~$ join -1 3 -2 1 sample.txt example.txt
+Engineering 1001 John ENG
+Marketing 1002 Sarah MKT
+Sales 1003 Mike SLS
+HR 1004 Emily HRS
+Finance 1005 David FIN
+```
+
+split
+
+
+
 
 #### diff
 
@@ -883,6 +1095,7 @@ tulei@tulei:~$ ls
 test
 tulei@tulei:~$ grep foobar test
 grep: test: Is a directory
+
 tulei@tulei:~$ ls test
 aaa.md  example.sh  example_1.sh
 tulei@tulei:~$ grep foobar ./test/*
@@ -891,6 +1104,33 @@ tulei@tulei:~$ grep foobar ./test/*
 ./test/example.sh:        echo "File $file doed not have any foobar"
 ./test/example.sh:        echo "# foobar" >> "$file"
 tulei@tulei:~$ 
+```
+
+当使用正则表达式时，加入 -E 就不需要再使用转义字符
+
+基本用法
+```bash
+grep -E "pattern" file 
+# 等同于 
+egrep "pattern" file
+```
+
+与普通 `grep`的区别
+
+ 普通 `grep`（基本正则表达式）
+
+```bash
+# 需要转义特殊字符 
+grep "a\|b" file      # 匹配 a 或 b 
+grep "a\{2,\}" file   # 匹配 2个或更多 a
+```
+
+ `grep -E`（扩展正则表达式）
+
+```bash
+# 不需要转义特殊字符 
+grep -E "a|b" file     # 匹配 a 或 b 
+grep -E "a{2,}" file   # 匹配 2个或更多 a
 ```
 
 #### ==rg==
