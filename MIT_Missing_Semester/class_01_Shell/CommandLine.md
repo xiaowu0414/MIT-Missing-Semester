@@ -6,6 +6,9 @@ tags:
 简单介绍linux: [linuxjourney.com](https://labex.io/linuxjourney) 
 命令行的一些实用技巧：[the-art-of-command-line](https://github.com/jlevy/the-art-of-command-line/blob/master/README-zh.md)
 命令的解释：[https://explainshell.com/](https://explainshell.com/)
+命令行中快速移动：[http://teohm.com/blog/shortcuts-to-move-faster-in-bash-command-line/](http://teohm.com/blog/shortcuts-to-move-faster-in-bash-command-line/)
+
+
 
 因为自己计算机目前是 Windows，所以这节课我会通过 wsl2，利用 Windows 上的 Ubuntu 22.04子系统来完成。
 
@@ -389,7 +392,8 @@ hostname: you must be root to change the host name
 ```
 
 #### htop:
-![](attachments/Pasted image 20251116141041.png)
+
+![](attachments/Pasted%20image%2020251120152613.png)
 htop shows:
 
 - Top: CPU and memory usage, as well as how long your computer has been running (uptime).
@@ -397,6 +401,10 @@ htop shows:
 - Bottom: Options for interacting with htop.
 
 记得按 q 退出
+
+#### neofetch
+
+![](attachments/Pasted%20image%2020251120152451.png)
 
 #### du
 

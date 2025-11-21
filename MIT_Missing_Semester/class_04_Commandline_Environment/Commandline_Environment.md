@@ -3,6 +3,9 @@ date: 2025-11-14
 tags:
   - Shell
 ---
+tmux 常用命令行：[https://gist.github.com/MohamedAlaa/2961058](https://gist.github.com/MohamedAlaa/2961058)
+
+
 ## Job Control
 
 ### killing a process

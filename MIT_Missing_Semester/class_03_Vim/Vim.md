@@ -4,6 +4,8 @@ tags:
   - Vim
 ---
 Vim的快捷键： https://devhints.io/vim
+Vim 四周教程：[https://medium.com/actualize-network/how-to-learn-vim-a-four-week-plan-cd8b376a9b85](https://medium.com/actualize-network/how-to-learn-vim-a-four-week-plan-cd8b376a9b85)
+Vim技巧：[http://yannesposito.com/Scratch/en/blog/Learn-Vim-Progressively/](http://yannesposito.com/Scratch/en/blog/Learn-Vim-Progressively/)
 
 ## Vim 基本操作介绍：
 
@@ -39,7 +41,7 @@ You should be learning by doing, not memorization.
 
   2. To start Vim from the shell prompt type:  vim FILENAME <ENTER>
   ​3. To exit Vim type:     <ESC>   :q!   <ENTER>  to trash all changes.
-jjj             OR type:      <ESC>   :wq   <ENTER>  to save the changes.
+             OR type:      <ESC>   :wq   <ENTER>  to save the changes.
 
   4. To delete the character at the cursor type:  x
   5. To insert or append text type:
@@ -199,6 +201,10 @@ NOTE:  If you want to ignore case for just one search command, use  \c
 - ```:bn``` 切换缓冲区的文件
 - `:sp` / `:vsp` to split windows
 - ```Ctrl+W CTRL+W ``` 在不同窗口之间切换
+
+- `zz`: 当前行至于页面中央
+- `fc`：光标移动到当前行的下一个字母 c
+- 
 
 - You can use modifiers to change the meaning of a noun. Some modifiers are `i`, which means “inner” or “inside”, and `a`, which means “around”.
 - `ci(` change the contents inside the current pair of parentheses

@@ -4,8 +4,12 @@ tags:
   - ShellScript
 ---
 [Shellscript教程](https://www.shellscript.sh/)
-
 [菜鸟教程](https://www.runoob.com/linux/linux-shell.html)
+[文档](https://www.gnu.org/savannah-checkouts/gnu/bash/manual/bash.html#Introduction)
+[30分钟教程](https://linuxhint.com/30_bash_script_examples/)
+
+
+
 ## 什么是bash？
 
 我们通常所说的bash和shell script之间的关系可以这样理解：
